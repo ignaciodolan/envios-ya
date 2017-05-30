@@ -12,12 +12,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Ruso
  */
 @Entity
+@XmlRootElement
 public class CadetEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +30,7 @@ public class CadetEntity implements Serializable {
     
     @NotNull
     @Column (unique = true)
-    private String IC;
+    private String document;
     
     @NotNull 
     private String name;
@@ -44,22 +47,24 @@ public class CadetEntity implements Serializable {
     public CadetEntity () {
     
     }   
-    public CadetEntity(Long id, String IC, String name, String surname, String email, List<VehicleEntity> vehicles) {
+    public CadetEntity(Long id, String document, String name, String surname, String email, List<VehicleEntity> vehicles) {
         this.id = id;
-        this.IC = IC;
+        this.document = document;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.vehicles = vehicles;
     }
 
-    public String getIC() {
-        return IC;
+    public String getDocument() {
+        return document;
     }
 
-    public void setIC(String IC) {
-        this.IC = IC;
+    public void setDocument(String document) {
+        this.document = document;
     }
+
+    
 
     public String getName() {
         return name;
@@ -93,6 +98,7 @@ public class CadetEntity implements Serializable {
         this.id = id;
     }
 
+    @XmlTransient
     public List<VehicleEntity> getVehicles() {
         return vehicles;
     }
