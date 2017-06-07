@@ -7,6 +7,7 @@ package com.enviosya.clients.beans;
 
 import com.enviosya.clients.dao.BaseDao;
 import com.enviosya.clients.entities.ClientEntity;
+import com.enviosya.clients.entities.PaymentMethodEntity;
 import com.enviosya.clients.exceptions.ClientsException;
 import com.sun.xml.internal.ws.util.StringUtils;
 import javax.ejb.EJB;
@@ -62,4 +63,30 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
         return StringUtils.isBlank(cliente.getName()) || StringUtils.isBlank(cliente.getLastname())
                 || StringUtils.isBlank(cliente.getDocument()) || StringUtils.isBlank(cliente.getEmail());
     }*/
+
+    
+    public Response associatePaymentMethod(Long idClient, Long idPaymentMethod) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Response addPaymentMethod(PaymentMethodEntity paymentMethodEntity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Response searchById(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Response getClientList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Response modify(ClientEntity clienteModificado) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Response add(ClientEntity clientEntity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
