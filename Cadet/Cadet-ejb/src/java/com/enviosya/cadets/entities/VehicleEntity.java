@@ -1,5 +1,5 @@
 
-package com.enviosya.cadets.vehicles.entities;
+package com.enviosya.cadets.entities;
 
 import java.io.Serializable;
 import javax.persistence.Column;

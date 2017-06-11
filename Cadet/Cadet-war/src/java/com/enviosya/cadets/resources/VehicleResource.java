@@ -5,7 +5,7 @@
  */
 package com.enviosya.cadets.resources;
 
-import com.enviosya.cadets.vehicles.beans.VehicleBean;
+import com.enviosya.cadets.beans.VehicleBean;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;

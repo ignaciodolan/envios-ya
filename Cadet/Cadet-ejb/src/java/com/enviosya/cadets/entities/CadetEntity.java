@@ -1,7 +1,6 @@
 
 package com.enviosya.cadets.entities;
 
-import com.enviosya.cadets.vehicles.entities.VehicleEntity;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +35,7 @@ public class CadetEntity implements Serializable {
     private String name;
     
     @NotNull
-    private String surname;
+    private String lastName;
 
     @NotNull
     @Column(unique = true)
@@ -47,11 +46,11 @@ public class CadetEntity implements Serializable {
     public CadetEntity () {
     
     }   
-    public CadetEntity(Long id, String document, String name, String surname, String email, List<VehicleEntity> vehicles) {
+    public CadetEntity(Long id, String document, String name, String lastName, String email, List<VehicleEntity> vehicles) {
         this.id = id;
         this.document = document;
         this.name = name;
-        this.surname = surname;
+        this.lastName = lastName;
         this.email = email;
         this.vehicles = vehicles;
     }
@@ -74,12 +73,12 @@ public class CadetEntity implements Serializable {
         this.name = name;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastName(String surname) {
+        this.lastName = surname;
     }
 
     public String getEmail() {

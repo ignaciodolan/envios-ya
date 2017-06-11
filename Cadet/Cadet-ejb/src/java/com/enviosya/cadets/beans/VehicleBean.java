@@ -5,13 +5,17 @@
  */
 package com.enviosya.cadets.beans;
 
-import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.ejb.LocalBean;
 
 /**
  *
  * @author Ruso
  */
-@Local
-public interface CadetBeanLocal {
-    
+@Stateless
+@LocalBean
+public class VehicleBean {
+
+    // Add business logic below. (Right-click in editor and choose
+    // "Insert Code > Add Business Method")
 }
