@@ -10,21 +10,19 @@ public class CadetDTO {
     private String email;
     private List<VehicleDTO> vehicles;
 
-    public CadetDTO(String document, String name, String lastName, String email, List<VehicleDTO> vehicles) {
+    public CadetDTO(String document, String name, String lastName, String email) {
         this.document = document;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        this.vehicles = vehicles;
     }
 
-    public CadetDTO(Long id, String document, String name, String lastName, String email, List<VehicleDTO> vehicles) {
+    public CadetDTO(Long id, String document, String name, String lastName, String email) {
         this.id = id;
         this.document = document;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        this.vehicles = vehicles;
     }
 
     public Long getId() {
