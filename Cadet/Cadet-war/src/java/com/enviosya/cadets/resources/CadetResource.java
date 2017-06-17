@@ -25,8 +25,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * REST Web Service
- *
- * @author Ruso
+ * 
  */
 @Path("cadet")
 public class CadetResource {

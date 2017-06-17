@@ -16,10 +16,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
-/**
- *
- * @author Ruso
- */
 @Stateless
 @LocalBean
 public class CadetBean {
@@ -58,8 +54,8 @@ public class CadetBean {
     private boolean isEmailValid(String email) {
         Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"); 
-        Matcher mather = pattern.matcher(email); 
-        return mather.find() == true;
+        Matcher matcher = pattern.matcher(email); 
+        return matcher.find() == true;
     }
 
     private boolean documentExists(String document) {

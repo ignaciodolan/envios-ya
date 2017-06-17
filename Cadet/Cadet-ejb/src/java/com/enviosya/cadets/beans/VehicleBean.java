@@ -8,10 +8,6 @@ package com.enviosya.cadets.beans;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 
-/**
- *
- * @author Ruso
- */
 @Stateless
 @LocalBean
 public class VehicleBean {

@@ -14,10 +14,6 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author Ruso
- */
 @Entity
 @XmlRootElement
 public class CadetEntity implements Serializable {

@@ -5,10 +5,6 @@
  */
 package com.enviosya.cadets.dto;
 
-/**
- *
- * @author Ruso
- */
 class VehicleDTO {
     
 }

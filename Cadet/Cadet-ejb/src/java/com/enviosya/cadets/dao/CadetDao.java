@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.enviosya.cadets.dao;
 
 import com.enviosya.cadets.dto.CadetDTO;
@@ -10,10 +5,6 @@ import com.enviosya.cadets.entities.CadetEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-/**
- *
- * @author Ruso
- */
 public class CadetDao extends BaseDao{
     
     @PersistenceContext

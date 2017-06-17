@@ -10,10 +10,6 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Ruso
- */
 @Entity
 @XmlRootElement
 public class VehicleEntity implements Serializable {
