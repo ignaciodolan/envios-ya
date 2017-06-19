@@ -41,6 +41,7 @@ public class CadetResource {
     /**
      * Creates a new instance of CadetResource
      */
+    
     public CadetResource() {
     }
 
@@ -65,34 +66,34 @@ public class CadetResource {
         try {
             CadetDTO cadeteDTO = gson.fromJson(cadetJSON, CadetDTO.class);
             cadeteDTO = cadetBean.create(cadeteDTO); 
-            message.append("Se creo exitosamente el cadete: ");
-            message.append(cadeteDTO);
+//            message.append("Se creo exitosamente el cadete: ");
+//            message.append(cadeteDTO);
             //TODO: Add log here
             //log.success(message);
             response =  Response.ok(cadeteDTO).build();
         } catch (JsonSyntaxException e) {
-            message.append("[Mensaje Syntax error gson]");
-            message.append(e.getMessage());
+//            message.append("[Mensaje Syntax error gson]");
+//            message.append(e.getMessage());
             //TODO: Add log here
             //log.error(message);
             response = Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity(message.toString())
+                    .entity("hola")
                     .build();
         } catch (JsonIOException e) {
-            message = new StringBuilder();
-            message.append("[Mensaje IO error gson]");
-            message.append(e.getMessage());
+//            message = new StringBuilder();
+//            message.append("[Mensaje IO error gson]");
+//            message.append(e.getMessage());
             //TODO: Add log here
             //log.error(message);
             response = Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(message.toString())
+                    .entity("hola3")
                     .build();
         } catch (CadetException e) {
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity(e.getMessage())
+                    .entity("hola2")
                     .build();
         }
         return response;
