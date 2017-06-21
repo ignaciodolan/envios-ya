@@ -5,8 +5,8 @@
  */
 package com.enviosya.cadets.beans;
 
-import com.enviosya.cadets.dao.BaseDao;
-import com.enviosya.cadets.dao.CadetDao;
+import com.enviosya.cadets.dao.BaseDAO;
+import com.enviosya.cadets.dao.CadetDAO;
 import com.enviosya.cadets.dto.CadetDTO;
 import com.enviosya.cadets.entities.CadetEntity;
 import com.enviosya.cadets.exceptions.CadetException;
@@ -21,9 +21,9 @@ import javax.ejb.LocalBean;
 public class CadetBean {
     
     @EJB
-    private CadetDao cadetDAO;
+    private CadetDAO cadetDAO;
 
-    public CadetDTO create(CadetDTO cadetDTO) throws CadetException{
+    public CadetDTO create(CadetDTO cadetDTO) throws CadetException {
         //TODO: check that the user is logged in
         if(cadetDTO == null){
             throw new CadetException("Invalid cadet.");

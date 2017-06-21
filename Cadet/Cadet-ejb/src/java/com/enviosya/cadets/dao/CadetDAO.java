@@ -2,15 +2,17 @@ package com.enviosya.cadets.dao;
 
 import com.enviosya.cadets.dto.CadetDTO;
 import com.enviosya.cadets.entities.CadetEntity;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-public class CadetDao extends BaseDao{
+@Stateless
+public class CadetDAO extends BaseDAO{
     
     @PersistenceContext
     private EntityManager entityManager;
 
-    public CadetDao() {
+    public CadetDAO() {
         super(CadetEntity.class);
     }
 

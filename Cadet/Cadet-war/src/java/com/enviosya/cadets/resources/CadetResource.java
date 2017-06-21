@@ -106,4 +106,6 @@ public class CadetResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
     }
+    
+    
 }

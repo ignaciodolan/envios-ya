@@ -6,14 +6,22 @@
 package com.enviosya.cadets.resources;
 
 import com.enviosya.cadets.beans.VehicleBean;
-import java.util.logging.Logger;
+import com.enviosya.cadets.dto.VehicleDTO;
+import com.enviosya.cadets.exceptions.VehicleException;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  * REST Web Service
@@ -23,18 +31,18 @@ import javax.ws.rs.core.MediaType;
 @Path("vehicle")
 
 public class VehicleResource {
-static Logger log = Logger.getLogger(VehicleResource.class.getName());
 
     @EJB
     VehicleBean vehicleBean;
     
+    private final Gson gson = new Gson();
+    
+    @Context
+    private UriInfo context;
+    
     public VehicleResource() {
     }
 
-    /**
-     * Retrieves representation of an instance of com.enviosya.cadet.resource.CadetResource
-     * @return an instance of java.lang.String
-     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
@@ -49,5 +57,42 @@ static Logger log = Logger.getLogger(VehicleResource.class.getName());
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createVehicle(String vehicleJSON) {
+        Response response;
+        StringBuilder message = null;
+        try {
+            VehicleDTO vehicleDTO = gson.fromJson(vehicleJSON, VehicleDTO.class);
+            vehicleDTO = vehicleBean.create(vehicleDTO); 
+            response =  Response.ok(vehicleDTO).build();
+        } catch (JsonSyntaxException e) {
+//            message.append("[Mensaje Syntax error gson]");
+//            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("hola")
+                    .build();
+        } catch (JsonIOException e) {
+//            message = new StringBuilder();
+//            message.append("[Mensaje IO error gson]");
+//            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("hola3")
+                    .build();
+        } catch (VehicleException e) {
+            response =  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("hola2")
+                    .build();
+        }
+        return response;
     }
 }
