@@ -10,3 +10,8 @@
 /Cadet/dist/
 /Cadet/build/
 /Cadet/Cadet-war/dist/
+/Clients/Clients-ejb/build/
+/Clients/Clients-war/build/
+/Clients/Clients-ejb/dist/
+/Clients/build/
+/Clients/Clients-war/dist/

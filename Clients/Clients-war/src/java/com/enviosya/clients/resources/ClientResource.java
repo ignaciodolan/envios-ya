@@ -1,9 +1,12 @@
 package com.enviosya.clients.resources;
 
 import com.enviosya.clients.beans.ClientBean;
+import com.enviosya.clients.dto.ClientDTO;
 import com.enviosya.clients.entities.ClientEntity;
-import com.enviosya.clients.entities.PaymentMethodEntity;
-import com.enviosya.clients.exceptions.ClientsException;
+import com.enviosya.clients.exceptions.ClientException;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -27,67 +30,102 @@ public class ClientResource {
 
     @EJB
     private ClientBean clientBean;
-    //private final Gson gson = new Gson();
+    private final Gson gson = new Gson();
     
     public ClientResource() {
     }
+    
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addClient(String stringJson) { 
-        StringBuilder message;
+    public Response createClient(String ClientJSON){ 
+         
+        Response response;
+        StringBuilder message = null;
         try {
-               ClientEntity clientEntity = null;//gson.fromJson(stringJson, ClientEntity.class);
-                return clientBean.add(clientEntity);
-        } catch (Exception e) {
+            ClientDTO clienteDTO = gson.fromJson(ClientJSON, ClientDTO.class);
+            clienteDTO = clientBean.create(clienteDTO); 
+            message.append("Se creo exitosamente el cliente: ");
+            message.append(clienteDTO);
+            //TODO: Add log here
+            //log.success(message);
+            response =  Response.ok(clienteDTO).build();
+        } catch (JsonSyntaxException e) {
+            message.append("[Mensaje Syntax error gson]");
+            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(message.toString())
+                    .build();
+        } catch (JsonIOException e) {
+            message = new StringBuilder();
+            message.append("[Mensaje IO error gson]");
+            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(message.toString())
+                    .build();
+        } catch (ClientException e) {
+            response =  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
         }
-        
-             
-       /* } catch (JsonSyntaxException e) {
-            mensaje = new StringBuilder();
-            mensaje.append("Se produjo un error de sintáxis en el gson al intentar agregar un cliente. Excepción: ");
-            mensaje.append(e.getMessage());
-            //log.error(mensaje);
-            return Response.status(Response.Status.BAD_REQUEST).entity(mensaje.toString()).build();
-        }catch (JsonIOException e) {
-            mensaje = new StringBuilder();
-            mensaje.append("Se produjo un error de IO en el gson al intentar agregar un cliente. Excepción: ");
-            mensaje.append(e.getMessage());
-           // log.error(mensaje);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(mensaje.toString()).build();
-        } catch (ClientsException e) {
-            mensaje = new StringBuilder();
-            mensaje.append("Exception: ");
-            mensaje.append(e.getMessage());
-            //log.error(mensaje);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(mensaje.toString()).build();
-        }*/
-       return null;
-}
-    
+        return response;
+    }
+   
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response modifyClient(String stringJson){
-        StringBuilder message;
+    public Response modifyClient(String ClientJSON){
+        Response response;
+        StringBuilder message = null;
         try {
             //primero usando gson transformo el stringJson en el objeto que necesito
-            ClientEntity modifyClient = null;//gson.fromJson(stringJson, ClientEntity.class);
-            return clientBean.modify(modifyClient);
-        } catch (Exception e) {
-             message = new StringBuilder();
-             message.append("Error a crear si se da una excepcion");
-             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
+            ClientDTO clienteDTO = gson.fromJson(ClientJSON, ClientDTO.class);
+            clienteDTO = clientBean.modify(clienteDTO);
+            message.append("Se modifico exitosamente el cliente: ");
+            message.append(clienteDTO);
+            //TODO: Add log here
+            //log.success(message);
+            response =  Response.ok(clienteDTO).build();
+        }catch (JsonSyntaxException e) {
+            message.append("[Mensaje Syntax error gson]");
+            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(message.toString())
+                    .build();
+        } catch (JsonIOException e) {
+            message = new StringBuilder();
+            message.append("[Mensaje IO error gson]");
+            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(message.toString())
+                    .build();
+        } catch (ClientException e) {
+            response =  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(e.getMessage())
+                    .build();
         }
+        return response;
     }
-    
-    
-    
+/*
      @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getClients() {
         StringBuilder message;
         try {
-            return clientBean.getClientList();
+            //return clientBean.getClientList();
         } catch (Exception e) {
             message = new StringBuilder();
             message.append("Exception: ");
@@ -113,40 +151,7 @@ public class ClientResource {
         }
     }
     
-    @POST
-    @Path("idClient/associatePaymentMethod/{idPaymentMethod}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response associatePaymentMethod(@PathParam("idClient") Long idClient, @PathParam("idClient") Long idPaymentMethod) {
-        StringBuilder message;
-        try {
-            return clientBean.associatePaymentMethod(idClient, idPaymentMethod);
-        } catch (Exception e) {
-            message = new StringBuilder();
-            message.append("Exception: ");
-            message.append(e.getMessage());
-            //log.error(mensaje);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
-        }
-    }
-    
-    @POST
-    @Path("medioDePago")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response addPaymentMethod(String stringJson) {
-        StringBuilder message;
-        try {
-            PaymentMethodEntity paymentMethodEntity = null;//gson.fromJson(stringJson, MedioPagoEntidad.class);
-            return clientBean.addPaymentMethod(paymentMethodEntity);
-        } catch (Exception e) {
-            message = new StringBuilder();
-            message.append("Se produjo un error de sintáxis en el gson al intentar agregar un cliente. Excepción: ");
-            message.append(e.getMessage());
-//            log.error(mensaje);
-            return Response.status(Response.Status.BAD_REQUEST).entity(message.toString()).build();
-        }
-    }
-    
-    
+*/
     @GET
     @Produces(MediaType.APPLICATION_XML)
     public String getXml() {

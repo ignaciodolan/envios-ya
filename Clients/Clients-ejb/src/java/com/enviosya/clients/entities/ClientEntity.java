@@ -6,28 +6,57 @@
 package com.enviosya.clients.entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Marcos
  */
 @Entity
+@XmlRootElement
 public class ClientEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long document;
+    
+    @NotNull
+    @Column(unique = true)
+    private String document;
+    
+    @NotNull
     private String name;
-    private String lastname;
+    
+    @NotNull
+    private String lastName;
+    
+    @NotNull
     private String email;
-    private List<PaymentMethodEntity> paymentMethod;
+    
+    @NotNull
+    private String paymentMethod;
+    
+    public ClientEntity(){
+    
+    }
+    
+    public ClientEntity(Long id, String document, String name, String lastname, String email, String payments) {
+        this.id = id;
+        this.document = document;
+        this.name = name;
+        this.lastName = lastname;
+        this.email = email;
+        this.paymentMethod = payments;
+    }
     
     public Long getId() {
         return id;
@@ -37,11 +66,11 @@ public class ClientEntity implements Serializable {
         this.id = id;
     }
 
-    public Long getDocument() {
+    public String getDocument() {
         return document;
     }
 
-    public void setDocument(Long document) {
+    public void setDocument(String document) {
         this.document = document;
     }
 
@@ -53,12 +82,12 @@ public class ClientEntity implements Serializable {
         this.name = name;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastname) {
+        this.lastName = lastname;
     }
 
     public String getEmail() {
@@ -69,16 +98,15 @@ public class ClientEntity implements Serializable {
         this.email = email;
     }
 
-    public List<PaymentMethodEntity> getPaymentMethod() {
+    @XmlTransient
+    public String getPaymentMethod() {
         return paymentMethod;
     }
 
-    public void setPaymentMethod(List<PaymentMethodEntity> paymentMethod) {
+    public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
     
-    
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -92,16 +120,7 @@ public class ClientEntity implements Serializable {
         if (!(object instanceof ClientEntity)) {
             return false;
         }
-        ClientEntity other = (ClientEntity) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        final ClientEntity other = (ClientEntity) object;
+        return Objects.equals(this.id, other.id);
     }
-
-    @Override
-    public String toString() {
-        return "com.enviosya.clients.entities.Client[ id=" + id + " ]";
-    }
-    
 }

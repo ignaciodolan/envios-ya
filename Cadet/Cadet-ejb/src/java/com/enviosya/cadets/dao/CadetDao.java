@@ -41,9 +41,10 @@ public class CadetDao extends BaseDao{
         entity.setLastName(cadetDTO.getLastName());
         return entity;
     }
+    
      private CadetDTO toDTO(CadetEntity entity) {
         CadetDTO cadetDTO = new CadetDTO(entity.getId(), entity.getDocument(),
-                entity.getEmail(), entity.getLastName(), entity.getName());
+        entity.getEmail(), entity.getLastName(), entity.getName());
         return cadetDTO;
     }
 }
