@@ -2,6 +2,7 @@ package com.enviosya.cadets.dao;
 
 import com.enviosya.cadets.dto.CadetDTO;
 import com.enviosya.cadets.entities.CadetEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,11 +23,11 @@ public class CadetDAO extends BaseDAO{
     }
     
     public boolean emailExists(String email){
-        return findByAttribute(email, "email") != null;
+        return !findByAttribute(email, "email").isEmpty();
     }
     
     public boolean documentExists(String document){
-        return findByAttribute(document, "document") != null;
+        return  !findByAttribute(document, "document").isEmpty();
     }
 
     public CadetDTO create(CadetDTO cadetDTO) {
@@ -45,7 +46,7 @@ public class CadetDAO extends BaseDAO{
     }
      private CadetDTO toDTO(CadetEntity entity) {
         CadetDTO cadetDTO = new CadetDTO(entity.getId(), entity.getDocument(),
-                entity.getEmail(), entity.getLastName(), entity.getName());
+                entity.getName(),entity.getLastName(),entity.getEmail());
         return cadetDTO;
     }
 }

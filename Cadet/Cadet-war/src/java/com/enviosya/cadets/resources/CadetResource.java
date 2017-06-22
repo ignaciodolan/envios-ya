@@ -62,38 +62,43 @@ public class CadetResource {
             String cadetJSON
     ) {
         Response response;
-        StringBuilder message = null;
+        StringBuilder message;
         try {
-            CadetDTO cadeteDTO = gson.fromJson(cadetJSON, CadetDTO.class);
-            cadeteDTO = cadetBean.create(cadeteDTO); 
-//            message.append("Se creo exitosamente el cadete: ");
-//            message.append(cadeteDTO);
-            //TODO: Add log here
-            //log.success(message);
-            response =  Response.ok(cadeteDTO).build();
+            CadetDTO cadetDTO = gson.fromJson(cadetJSON, CadetDTO.class);
+            cadetDTO = cadetBean.create(cadetDTO); 
+            message = new StringBuilder();
+            message.append("Se creo exitosamente el cadete: ");
+//            TODO: Add log here
+//            log.success(message);
+            response = Response.status(Response.Status.CREATED).entity(gson.toJson(cadetDTO)).build();
+            //response =  Response.ok(cadetDTO).build();
         } catch (JsonSyntaxException e) {
-//            message.append("[Mensaje Syntax error gson]");
-//            message.append(e.getMessage());
+            message = new StringBuilder();
+            message.append("[Message Syntax error gson]");
+            message.append(e.getMessage());
             //TODO: Add log here
             //log.error(message);
             response = Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("hola")
+                    .entity(message.toString())
                     .build();
         } catch (JsonIOException e) {
-//            message = new StringBuilder();
-//            message.append("[Mensaje IO error gson]");
-//            message.append(e.getMessage());
+            message = new StringBuilder();
+            message.append("[Message IO error gson]");
+            message.append(e.getMessage());
             //TODO: Add log here
             //log.error(message);
             response = Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("hola3")
+                    .entity(message.toString())
                     .build();
         } catch (CadetException e) {
+            message = new StringBuilder();
+            message.append("[Message Cadet Exception]");
+            message.append(e.getMessage());
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("hola2")
+                    .entity(message.toString())
                     .build();
         }
         return response;
