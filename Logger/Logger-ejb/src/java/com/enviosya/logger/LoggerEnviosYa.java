@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 public class LoggerEnviosYa {
     private Logger logger;
 
-    public LoggerEnviosYa(Class nombre) {
-        logger = Logger.getLogger(nombre.getName());
+    public LoggerEnviosYa(Class name) {
+        logger = Logger.getLogger(name.getName());
     }
     
     public void error(String message){
