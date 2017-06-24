@@ -41,6 +41,7 @@ public class CadetResource {
     /**
      * Creates a new instance of CadetResource
      */
+    
     public CadetResource() {
     }
 
@@ -61,17 +62,19 @@ public class CadetResource {
             String cadetJSON
     ) {
         Response response;
-        StringBuilder message = null;
+        StringBuilder message;
         try {
-            CadetDTO cadeteDTO = gson.fromJson(cadetJSON, CadetDTO.class);
-            cadeteDTO = cadetBean.create(cadeteDTO); 
+            CadetDTO cadetDTO = gson.fromJson(cadetJSON, CadetDTO.class);
+            cadetDTO = cadetBean.create(cadetDTO); 
+            message = new StringBuilder();
             message.append("Se creo exitosamente el cadete: ");
-            message.append(cadeteDTO);
-            //TODO: Add log here
-            //log.success(message);
-            response =  Response.ok(cadeteDTO).build();
+//            TODO: Add log here
+//            log.success(message);
+            response = Response.status(Response.Status.CREATED).entity(gson.toJson(cadetDTO)).build();
+            //response =  Response.ok(cadetDTO).build();
         } catch (JsonSyntaxException e) {
-            message.append("[Mensaje Syntax error gson]");
+            message = new StringBuilder();
+            message.append("[Message Syntax error gson]");
             message.append(e.getMessage());
             //TODO: Add log here
             //log.error(message);
@@ -81,7 +84,7 @@ public class CadetResource {
                     .build();
         } catch (JsonIOException e) {
             message = new StringBuilder();
-            message.append("[Mensaje IO error gson]");
+            message.append("[Message IO error gson]");
             message.append(e.getMessage());
             //TODO: Add log here
             //log.error(message);
@@ -90,9 +93,12 @@ public class CadetResource {
                     .entity(message.toString())
                     .build();
         } catch (CadetException e) {
+            message = new StringBuilder();
+            message.append("[Message Cadet Exception]");
+            message.append(e.getMessage());
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity(e.getMessage())
+                    .entity(message.toString())
                     .build();
         }
         return response;
@@ -104,5 +110,38 @@ public class CadetResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
+    }
+    
+    @POST
+    @Path("/vehicles")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addVehicles(String mensajeJson) {
+        StringBuilder message;
+        Response response;
+        try {
+            CadetDTO cadetDTO = gson.fromJson(mensajeJson, CadetDTO.class);
+            cadetBean.addVehicleToCadet(cadetDTO);
+            response = Response.status(Response.Status.CREATED).entity(gson.toJson(cadetDTO)).build();
+        } catch (JsonSyntaxException e) {
+            message = new StringBuilder();
+            message.append("[Message Syntax error gson]");
+            message.append(e.getMessage());
+            response = Response.status(Response.Status.BAD_REQUEST).entity(message.toString()).build();
+        } catch (JsonIOException e) {
+            message = new StringBuilder();
+            message.append("[Message IO error gson]");
+            message.append(e.getMessage());
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
+        } catch (CadetException e) {
+            message = new StringBuilder();
+            message.append("[Message Cadet Exception]");
+            message.append(e.getMessage());
+            response =  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(message.toString())
+                    .build();
+        }
+        return response;
+  
     }
 }

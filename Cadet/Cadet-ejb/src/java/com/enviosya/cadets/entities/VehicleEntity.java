@@ -21,7 +21,7 @@ public class VehicleEntity implements Serializable {
 
     @NotNull
     @Column(unique = true)
-    private String licencePlate;
+    private String licensePlate;
     
     private String description;
     
@@ -35,11 +35,11 @@ public class VehicleEntity implements Serializable {
     }
 
     public String getLicencePlate() {
-        return licencePlate;
+        return licensePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
+    public void setLicencePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public String getDescription() {

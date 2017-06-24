@@ -11,11 +11,11 @@ import javax.persistence.Query;
 
 
 
-public abstract class BaseDao<T> {
+public abstract class BaseDAO<T> {
 
 	private Class<T> entityClass;
 
-	public BaseDao(Class<T> entityClass) {
+	public BaseDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;
 	}
 
