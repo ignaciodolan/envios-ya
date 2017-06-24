@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.enviosya.cadets.resources;
 
 import com.enviosya.cadets.beans.VehicleBean;
@@ -23,11 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-/**
- * REST Web Service
- *
- * @author Ruso
- */
+
 @Path("vehicle")
 
 public class VehicleResource {
@@ -63,34 +55,37 @@ public class VehicleResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createVehicle(String vehicleJSON) {
         Response response;
-        StringBuilder message = null;
+        StringBuilder message;
         try {
             VehicleDTO vehicleDTO = gson.fromJson(vehicleJSON, VehicleDTO.class);
             vehicleDTO = vehicleBean.create(vehicleDTO); 
-            response =  Response.ok(vehicleDTO).build();
+            message = new StringBuilder();
+            message.append("Se creo exitosamente el vehículo: ");
+            response = Response.status(Response.Status.CREATED).entity(gson.toJson(vehicleDTO)).build();
         } catch (JsonSyntaxException e) {
-//            message.append("[Mensaje Syntax error gson]");
-//            message.append(e.getMessage());
+            message = new StringBuilder();
+            message.append("[Mensaje Syntax error gson]");
             //TODO: Add log here
             //log.error(message);
             response = Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("hola")
+                    .entity(message.toString())
                     .build();
         } catch (JsonIOException e) {
-//            message = new StringBuilder();
-//            message.append("[Mensaje IO error gson]");
-//            message.append(e.getMessage());
+            message = new StringBuilder();
+            message.append("[Mensaje IO error gson]");
             //TODO: Add log here
             //log.error(message);
             response = Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("hola3")
+                    .entity(message.toString())
                     .build();
         } catch (VehicleException e) {
+            message = new StringBuilder();
+            message.append("[Message Vehicle Exception]");
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("hola2")
+                    .entity(message.toString())
                     .build();
         }
         return response;

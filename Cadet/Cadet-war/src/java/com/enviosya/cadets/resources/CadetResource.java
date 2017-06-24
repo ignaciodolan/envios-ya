@@ -112,5 +112,36 @@ public class CadetResource {
     public void putJson(String content) {
     }
     
-    
+    @POST
+    @Path("/vehicles")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addVehicles(String mensajeJson) {
+        StringBuilder message;
+        Response response;
+        try {
+            CadetDTO cadetDTO = gson.fromJson(mensajeJson, CadetDTO.class);
+            cadetBean.addVehicleToCadet(cadetDTO);
+            response = Response.status(Response.Status.CREATED).entity(gson.toJson(cadetDTO)).build();
+        } catch (JsonSyntaxException e) {
+            message = new StringBuilder();
+            message.append("[Message Syntax error gson]");
+            message.append(e.getMessage());
+            response = Response.status(Response.Status.BAD_REQUEST).entity(message.toString()).build();
+        } catch (JsonIOException e) {
+            message = new StringBuilder();
+            message.append("[Message IO error gson]");
+            message.append(e.getMessage());
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
+        } catch (CadetException e) {
+            message = new StringBuilder();
+            message.append("[Message Cadet Exception]");
+            message.append(e.getMessage());
+            response =  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(message.toString())
+                    .build();
+        }
+        return response;
+  
+    }
 }

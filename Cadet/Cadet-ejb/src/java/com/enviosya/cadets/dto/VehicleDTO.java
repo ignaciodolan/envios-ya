@@ -2,17 +2,17 @@ package com.enviosya.cadets.dto;
 
 public class VehicleDTO {
     private long id;
-    private String licencePlate;
+    private String licensePlate;
     private String description;
 
-    public VehicleDTO(long id, String licencePlate, String description) {
+    public VehicleDTO(long id, String licensePlate, String description) {
         this.id = id;
-        this.licencePlate = licencePlate;
+        this.licensePlate = licensePlate;
         this.description = description;
     }
 
-    public VehicleDTO(String licencePlate, String description) {
-        this.licencePlate = licencePlate;
+    public VehicleDTO(String licensePlate, String description) {
+        this.licensePlate = licensePlate;
         this.description = description;
     }
 
@@ -26,12 +26,12 @@ public class VehicleDTO {
         this.id = id;
     }
 
-    public String getLicencePlate() {
-        return licencePlate;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setLicencePlate(String licencePlate) {
-        this.licencePlate = licencePlate;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = this.licensePlate;
     }
 
     public String getDescription() {

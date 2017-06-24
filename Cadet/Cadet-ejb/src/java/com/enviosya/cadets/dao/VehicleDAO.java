@@ -29,7 +29,7 @@ public class VehicleDAO extends BaseDAO{
 
     private VehicleEntity toEntity(VehicleDTO vehicleDTO) {
         VehicleEntity entity = new VehicleEntity();
-        entity.setLicencePlate(vehicleDTO.getLicencePlate());
+        entity.setLicencePlate(vehicleDTO.getLicensePlate());
         entity.setDescription(vehicleDTO.getDescription());
        
         return entity;
@@ -40,8 +40,20 @@ public class VehicleDAO extends BaseDAO{
         return vehicleDTO;
     }
      
-     public boolean licencePlateExists(String licencePlate){
-        return findByAttribute(licencePlate, "licencePlate") != null;
+     public boolean licensePlateExists(String licensePlate){
+        return !findByAttribute(licensePlate, "licensePlate").isEmpty();
     }
+     
+     public VehicleEntity get (Long id) {
+         try {
+            return (VehicleEntity) find(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+     
+     public boolean idExists (Long id) {
+         return get(id) != null;
+     }
     
 }

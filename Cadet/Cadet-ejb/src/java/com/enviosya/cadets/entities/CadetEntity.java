@@ -97,7 +97,7 @@ public class CadetEntity implements Serializable {
         return vehicles;
     }
 
-    public void setVehiculos(List<VehicleEntity> vehicles) {
+    public void setVehicles(List<VehicleEntity> vehicles) {
         this.vehicles = vehicles;
     }
     
