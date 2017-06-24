@@ -21,7 +21,7 @@ public class ClientDTO {
     private String email;
     private String paymentMethod;
     
-    public ClientDTO(Long id, String document, String name, String lastname, String payments) {
+    public ClientDTO(Long id, String document, String name, String lastname, String payments, String email) {
         this.id = id;
         this.document = document;
         this.name = name;
@@ -30,7 +30,7 @@ public class ClientDTO {
         this.paymentMethod = payments;
     }
     
-    public ClientDTO(String document, String name, String lastname, String payments) {
+    public ClientDTO(String document, String name, String lastname, String payments, String email) {
         this.document = document;
         this.name = name;
         this.lastName = lastname;
@@ -78,7 +78,6 @@ public class ClientDTO {
         this.email = email;
     }
 
-    @XmlTransient
     public String getPaymentMethod() {
         return paymentMethod;
     }

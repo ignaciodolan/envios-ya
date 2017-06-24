@@ -7,13 +7,14 @@ package com.enviosya.clients.dao;
 
 import com.enviosya.clients.dto.ClientDTO;
 import com.enviosya.clients.entities.ClientEntity;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-
+@Stateless
 public class ClientDao extends BaseDao{
    @PersistenceContext(unitName = "Clients-ejbPU")
-    private EntityManager em;
+    private EntityManager entityManager;
 
 
     public ClientDao() {
@@ -22,15 +23,15 @@ public class ClientDao extends BaseDao{
 
     @Override
     protected EntityManager getEntityManager() {
-        return em;
+        return entityManager;
     }
     
     public boolean emailExists(String email){
-        return findByAttribute(email, "email") != null;
+        return !findByAttribute(email, "email").isEmpty();
     }
     
     public boolean documentExists(String document){
-        return findByAttribute(document, "document") != null;
+        return !findByAttribute(document, "document").isEmpty();
     }
 
     public ClientDTO create(ClientDTO clientDTO) {
@@ -43,33 +44,38 @@ public class ClientDao extends BaseDao{
         ClientEntity entity = new ClientEntity();
         entity.setDocument(clientDTO.getDocument());
         entity.setName(clientDTO.getName());
-        entity.setEmail(clientDTO.getEmail());
         entity.setLastName(clientDTO.getLastName());
+        entity.setPaymentMethod(clientDTO.getPaymentMethod());
+        entity.setEmail(clientDTO.getEmail());
         return entity;
     }
     
      private ClientDTO toDTO(ClientEntity entity) {
         ClientDTO clientDTO;
-        clientDTO = new ClientDTO(entity.getId(), entity.getDocument(),
-        entity.getEmail(), entity.getLastName(), entity.getName());
+        clientDTO = new ClientDTO(entity.getId(), entity.getDocument(), entity.getName(), entity.getLastName(), 
+        entity.getPaymentMethod(), entity.getEmail());
         return clientDTO;
     }
 
     public ClientDTO modify(ClientDTO clientDTO) {
-        ClientEntity client = toEntity(clientDTO);
-        ClientEntity originarClient = em.find(ClientEntity.class, client.getId());
-        originarClient.setName(client.getName());
-        originarClient.setLastName(client.getLastName());
-        originarClient.setDocument(client.getDocument());
-        originarClient.setEmail(client.getEmail());
-        client = em.merge(originarClient);
-        return toDTO(client);
+        ClientEntity originalClient = find(clientDTO.getId());
+        originalClient.setName(clientDTO.getName());
+        originalClient.setLastName(clientDTO.getLastName());
+        originalClient.setDocument(clientDTO.getDocument());
+        originalClient.setEmail(clientDTO.getEmail());
+        originalClient.setPaymentMethod(clientDTO.getPaymentMethod());
+        originalClient = entityManager.merge(originalClient);
+        return toDTO(originalClient);
     }
-
+    
+    public ClientEntity find(Long id){
+        return (ClientEntity) entityManager.find(ClientEntity.class, id);
+    }
+    
     public void delete(ClientDTO clientDTO) {
         ClientEntity client = toEntity(clientDTO);
-        ClientEntity originarClient = em.find(ClientEntity.class, client.getId());
-        em.remove(originarClient);
+        ClientEntity originalClient = entityManager.find(ClientEntity.class, client.getId());
+        entityManager.remove(originalClient);
     }
     
     

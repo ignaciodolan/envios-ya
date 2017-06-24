@@ -39,18 +39,19 @@ public class ClientResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createClient(String ClientJSON){ 
-         
         Response response;
-        StringBuilder message = null;
+        StringBuilder message;
         try {
             ClientDTO clienteDTO = gson.fromJson(ClientJSON, ClientDTO.class);
             clienteDTO = clientBean.create(clienteDTO); 
+            message = new StringBuilder();
             message.append("Se creo exitosamente el cliente: ");
             message.append(clienteDTO);
             //TODO: Add log here
             //log.success(message);
             response =  Response.ok(clienteDTO).build();
         } catch (JsonSyntaxException e) {
+            message = new StringBuilder();
             message.append("[Mensaje Syntax error gson]");
             message.append(e.getMessage());
             //TODO: Add log here
@@ -78,21 +79,23 @@ public class ClientResource {
         return response;
     }
    
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response modifyClient(String ClientJSON){
         Response response;
-        StringBuilder message = null;
+        StringBuilder message;
         try {
             //primero usando gson transformo el stringJson en el objeto que necesito
             ClientDTO clienteDTO = gson.fromJson(ClientJSON, ClientDTO.class);
             clienteDTO = clientBean.modify(clienteDTO);
+            message = new StringBuilder();
             message.append("Se modifico exitosamente el cliente: ");
-            message.append(clienteDTO);
+            message.append(gson.toJson(clienteDTO));
             //TODO: Add log here
             //log.success(message);
-            response =  Response.ok(clienteDTO).build();
+            response =  Response.ok(message.toString()).build();
         }catch (JsonSyntaxException e) {
+            message = new StringBuilder();
             message.append("[Mensaje Syntax error gson]");
             message.append(e.getMessage());
             //TODO: Add log here
@@ -117,6 +120,7 @@ public class ClientResource {
                     .entity(e.getMessage())
                     .build();
         }
+        
         return response;
     }
 /*

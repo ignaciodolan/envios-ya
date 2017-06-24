@@ -49,7 +49,7 @@ public class ClientEntity implements Serializable {
     
     }
     
-    public ClientEntity(Long id, String document, String name, String lastname, String email, String payments) {
+    public ClientEntity(Long id, String document, String name, String lastname, String payments, String email) {
         this.id = id;
         this.document = document;
         this.name = name;

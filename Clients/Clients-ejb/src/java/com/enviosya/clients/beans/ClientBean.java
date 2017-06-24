@@ -28,12 +28,12 @@ public class ClientBean {
 private static final String ENTIDAD_NULA = "La entidad es nula";
 
     @EJB
-    private ClientDao clienteDao;
+    private ClientDao clientDAO;
     
     public ClientDTO create(ClientDTO clientDTO) throws ClientException{
         //TODO: check that the user is logged in
         if(clientDTO == null){
-            throw new ClientException("Invalid cadet.");
+            throw new ClientException("Invalid client.");
         }
         if(nullValuesInCadetExist(clientDTO)){
             throw new ClientException("Missing required fields.");
@@ -48,7 +48,8 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
             throw new ClientException("Email already in use.");
         }
         
-        clientDTO = clienteDao.create(clientDTO);
+        clientDTO = clientDAO.create(clientDTO);
+        
         return clientDTO;
     }
     
@@ -66,7 +67,8 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
         if(!documentExists(clientDTO.getDocument())){
             throw new ClientException("You have to modify an existing client.");
         }
-        clientDTO = clienteDao.modify(clientDTO);
+        clientDTO = clientDAO.modify(clientDTO);
+        
         return clientDTO;
     }
     
@@ -76,7 +78,7 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
         if(!documentExists(clientDTO.getDocument())){
             throw new ClientException("You have to delete an existing client.");
         }       
-        clienteDao.delete(clientDTO);
+        clientDAO.delete(clientDTO);
     }
     
     public Response associatePaymentMethod(Long idClient, Long idPaymentMethod) {
@@ -106,11 +108,11 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
     }
 
     private boolean documentExists(String document) {
-        return clienteDao.documentExists(document);
+        return clientDAO.documentExists(document);
     }
     
     private boolean emailExists(String email) {
-        return clienteDao.emailExists(email);
+        return clientDAO.emailExists(email);
     }
 
 }
