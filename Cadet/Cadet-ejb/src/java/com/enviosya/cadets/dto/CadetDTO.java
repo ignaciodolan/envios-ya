@@ -1,5 +1,7 @@
 package com.enviosya.cadets.dto;
 
+import com.google.gson.annotations.Expose;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CadetDTO {
@@ -8,15 +10,21 @@ public class CadetDTO {
     private String name;
     private String lastName;
     private String email;
+    @Expose(serialize = false, deserialize = true)
+    private List<Long> vehiclesIds;
     private List<VehicleDTO> vehicles;
 
+
+    //private List<Long> shipmentsId;
+    
     public CadetDTO(String document, String name, String lastName, String email) {
         this.document = document;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
     }
-
+    
+    
     public CadetDTO(Long id, String document, String name, String lastName, String email) {
         this.id = id;
         this.document = document;
@@ -24,7 +32,13 @@ public class CadetDTO {
         this.lastName = lastName;
         this.email = email;
     }
-
+    
+        public CadetDTO() {
+        vehiclesIds = new ArrayList<>();
+        vehicles = new ArrayList<>();
+//        shipmentsId = new ArrayList<Long>();
+    }
+    
     public Long getId() {
         return id;
     }
@@ -73,6 +87,15 @@ public class CadetDTO {
         this.vehicles = vehicles;
     }
     
-    
+    public List<Long> getVehiclesIds() {
+        vehicles.forEach((vehicle) -> {
+            vehiclesIds.add(vehicle.getId());
+        });
+        return vehiclesIds;
+    }
+
+    public void setVehiclesIds(List<Long> vehiclesIds) {
+        this.vehiclesIds = vehiclesIds;
+    }
     
 }

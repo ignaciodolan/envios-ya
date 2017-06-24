@@ -93,8 +93,7 @@ public class CadetEntity implements Serializable {
         this.id = id;
     }
 
-    @XmlTransient
-    public List<VehicleEntity> getVehicles() {
+     public List<VehicleEntity> getVehicles() {
         return vehicles;
     }
 
