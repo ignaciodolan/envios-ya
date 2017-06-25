@@ -210,6 +210,9 @@ public class CadetBean {
         }
         cadetDAO.removeCadet(id);
     }
-
+    
+    public List<CadetDTO> getNearbyCadets(Long latitude, Long length) throws CadetException {
+        return cadetDAO.getNearbyCadets(latitude, length);
+    }
     
 }

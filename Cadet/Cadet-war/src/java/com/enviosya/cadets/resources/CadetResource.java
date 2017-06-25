@@ -63,13 +63,17 @@ public class CadetResource {
         Response response;
         try {
             List<CadetDTO> cadets = cadetBean.getCadets();
+            message = new StringBuilder();
+            message.append("List of cadets:");
+            message.append(gson.toJson(cadets));
+            logger.success(message.toString());
             response = Response.ok().entity(gson.toJson(cadets)).build();
             
         } catch (CadetException e) {
             message = new StringBuilder();
             message.append("[Message Cadet Exception]: ");
             message.append(e.getMessage());
-//            log.error(message);
+            logger.error(message.toString());
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
         }
         return response;
@@ -83,12 +87,16 @@ public class CadetResource {
         Response response;
         try {
             CadetDTO cadet = cadetBean.getCadet(id);
+            message = new StringBuilder();
+            message.append("Cadet:");
+            message.append(gson.toJson(cadet));
+            logger.success(message.toString());
             response = Response.ok().entity(gson.toJson(cadet)).build();
         } catch (CadetException e) {
             message = new StringBuilder();
             message.append("[Message Cadet Exception]: ");
             message.append(e.getMessage());
-//            log.error(message);
+            logger.error(message.toString());
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
         
         }
@@ -150,13 +158,16 @@ public class CadetResource {
         try {
             CadetDTO newCadet = gson.fromJson(messageJson, CadetDTO.class);
             newCadet = cadetBean.modify(newCadet, id);
+            message = new StringBuilder();
+            message.append("Cadet was modified: ");
+            message.append(gson.toJson(newCadet));
+            logger.success(message.toString());
             response = Response.status(Response.Status.CREATED).entity(gson.toJson(newCadet)).build();
         } catch (JsonSyntaxException e) {
             message = new StringBuilder();
             message.append("[Message Syntax error gson]");
             message.append(e.getMessage());
-            //TODO: Add log here
-            //log.error(message);
+            logger.error(message.toString());
             response = Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(message.toString())
@@ -165,8 +176,7 @@ public class CadetResource {
             message = new StringBuilder();
             message.append("[Message IO error gson]");
             message.append(e.getMessage());
-            //TODO: Add log here
-            //log.error(message);
+            logger.error(message.toString());
             response = Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(message.toString())
@@ -175,6 +185,7 @@ public class CadetResource {
             message = new StringBuilder();
             message.append("[Message Cadet Exception]");
             message.append(e.getMessage());
+            logger.error(message.toString());
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(message.toString())
@@ -192,6 +203,10 @@ public class CadetResource {
         try {
             CadetDTO cadetDTO = gson.fromJson(mensajeJson, CadetDTO.class);
             cadetBean.addVehicleToCadet(cadetDTO);
+            message = new StringBuilder();
+            message.append("Vehicle added to cadet: ");
+            message.append(gson.toJson(cadetDTO));
+            logger.success(message.toString());
             response = Response.status(Response.Status.CREATED).entity(gson.toJson(cadetDTO)).build();
         } catch (JsonSyntaxException e) {
             message = new StringBuilder();
@@ -225,13 +240,15 @@ public class CadetResource {
         Response response;
         try {
             cadetBean.removeVehicle(cadetId, vehicleId);
+            message = new StringBuilder();
+            message.append("Vehicle (id:").append(vehicleId).append(") was deleted from cadet (id:").append(cadetId).append(")");
+            logger.success(message.toString());
             response = Response.status(Response.Status.OK).entity(SUCCESSFUL_OPERATION).build();
         } catch (JsonSyntaxException e) {
             message = new StringBuilder();
             message.append("[Message Syntax error gson]");
             message.append(e.getMessage());
-            //TODO: Add log here
-            //log.error(message);
+            logger.error(message.toString());
             response = Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(message.toString())
@@ -240,8 +257,7 @@ public class CadetResource {
             message = new StringBuilder();
             message.append("[Message IO error gson]");
             message.append(e.getMessage());
-            //TODO: Add log here
-            //log.error(message);
+            logger.error(message.toString());
             response = Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(message.toString())
@@ -250,6 +266,7 @@ public class CadetResource {
             message = new StringBuilder();
             message.append("[Message Cadet Exception]");
             message.append(e.getMessage());
+            logger.error(message.toString());
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(message.toString())
@@ -272,11 +289,38 @@ public class CadetResource {
         Response response;
         try {
             cadetBean.remove(id);
-            response = Response.ok().build();
+            message = new StringBuilder();
+            message.append("Cadet (id:").append(id).append(") was deleted:");
+            logger.success(message.toString());
+            response = Response.status(Response.Status.OK).entity(SUCCESSFUL_OPERATION).build();
         } catch (CadetException e) {
             message = new StringBuilder();
             message.append("[Message Cadet Exception]: ");
             message.append(e.getMessage());
+            logger.error(message.toString());
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
+        }
+        return response;
+    }
+    
+    @GET
+    @Path("/nearby/{latitude}/{length}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response nearbyCadets(@PathParam("latitude") Long latitude, @PathParam("length") Long length) {
+        StringBuilder message;
+        Response response;
+        try {
+            List<CadetDTO> cadets = cadetBean.getNearbyCadets(latitude, length);
+            message = new StringBuilder();
+            message.append("List of nerby cadets: ");
+            message.append(gson.toJson(cadets));
+            logger.success(message.toString());
+            response = Response.ok().entity(gson.toJson(cadets)).build();
+        } catch (CadetException e) {
+            message = new StringBuilder();
+            message.append("[Message Cadet Exception]: ");
+            message.append(e.getMessage());
+            logger.error(message.toString());
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
         }
         return response;

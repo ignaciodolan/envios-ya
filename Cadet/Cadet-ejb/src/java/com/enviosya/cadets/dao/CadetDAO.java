@@ -150,6 +150,15 @@ public class CadetDAO extends BaseDAO{
         }
     }
     
+    public List<CadetDTO> getNearbyCadets(Long latitude, Long length) {
+        List<CadetEntity> cadets = entityManager.createQuery("select c from CadetEntity c").setMaxResults(4).getResultList();
+        List<CadetDTO> cadetsDTO = new ArrayList<>();
+        for (CadetEntity cadet: cadets) {
+            cadetsDTO.add(toDTO(cadet));
+        }
+        return cadetsDTO;
+    }
+    
 
      
 }
