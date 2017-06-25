@@ -22,6 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import com.enviosya.logger.LoggerEnviosYa;
 
 /**
  * REST Web Service
@@ -34,6 +35,7 @@ public class CadetResource {
     private CadetBean cadetBean;
     
     private final Gson gson = new Gson();
+    private final LoggerEnviosYa logger = new LoggerEnviosYa(CadetResource.class);
     
     @Context
     private UriInfo context;
@@ -68,16 +70,13 @@ public class CadetResource {
             cadetDTO = cadetBean.create(cadetDTO); 
             message = new StringBuilder();
             message.append("Se creo exitosamente el cadete: ");
-//            TODO: Add log here
-//            log.success(message);
+            logger.success(message.toString());
             response = Response.status(Response.Status.CREATED).entity(gson.toJson(cadetDTO)).build();
-            //response =  Response.ok(cadetDTO).build();
         } catch (JsonSyntaxException e) {
             message = new StringBuilder();
             message.append("[Message Syntax error gson]");
             message.append(e.getMessage());
-            //TODO: Add log here
-            //log.error(message);
+            logger.error(message.toString());
             response = Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(message.toString())
@@ -86,8 +85,7 @@ public class CadetResource {
             message = new StringBuilder();
             message.append("[Message IO error gson]");
             message.append(e.getMessage());
-            //TODO: Add log here
-            //log.error(message);
+            logger.error(message.toString());
             response = Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(message.toString())
@@ -96,6 +94,7 @@ public class CadetResource {
             message = new StringBuilder();
             message.append("[Message Cadet Exception]");
             message.append(e.getMessage());
+            logger.error(message.toString());
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(message.toString())
@@ -126,16 +125,19 @@ public class CadetResource {
             message = new StringBuilder();
             message.append("[Message Syntax error gson]");
             message.append(e.getMessage());
+            logger.error(message.toString());
             response = Response.status(Response.Status.BAD_REQUEST).entity(message.toString()).build();
         } catch (JsonIOException e) {
             message = new StringBuilder();
             message.append("[Message IO error gson]");
             message.append(e.getMessage());
+            logger.error(message.toString());
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
         } catch (CadetException e) {
             message = new StringBuilder();
             message.append("[Message Cadet Exception]");
             message.append(e.getMessage());
+            logger.error(message.toString());
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity(message.toString())
