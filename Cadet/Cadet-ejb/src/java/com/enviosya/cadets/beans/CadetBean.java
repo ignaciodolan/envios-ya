@@ -23,7 +23,7 @@ import javax.ws.rs.core.Response;
 @LocalBean
 public class CadetBean {
     
-    private static final String SUCCESSFUL_OPERATION = " Operation completed successfully";
+    
     
     private static final String NULL_ENTITY = " Entity to build is null";
     

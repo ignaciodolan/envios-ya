@@ -1,3 +1,6 @@
+/Clients/nbproject/private/
+/Clients/Clients-war/nbproject/private/
+/Clients/Clients-ejb/nbproject/private/
 /Cadet/nbproject/private/
 /Cadet/Cadet-war/nbproject/private/
 /Cadet/Cadet-ejb/nbproject/private/
@@ -7,3 +10,8 @@
 /Cadet/dist/
 /Cadet/build/
 /Cadet/Cadet-war/dist/
+/Clients/Clients-ejb/build/
+/Clients/Clients-war/build/
+/Clients/Clients-ejb/dist/
+/Clients/build/
+/Clients/Clients-war/dist/
