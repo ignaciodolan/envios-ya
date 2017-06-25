@@ -138,6 +138,21 @@ public class CadetBean {
         cadetDAO.associateVehicles(cadetDTO);
         
     }
+    public void removeVehicle(Long cadetId, Long vehicleId) throws CadetException {
+        
+        
+        if (cadetId == null || vehicleId == null) {
+            throw new CadetException(EMPTY_FIELDS_TO_REMOVE_VEHICLES);
+        }
+        if (!cadetIdExists(cadetId)) {
+            throw new CadetException(CADET_ID_DOES_NOT_EXISTS);
+        }
+        if (!vehicleIdExists(vehicleId)) {
+            throw new CadetException(VEHICLE_DOES_NOT_EXISTS);
+        }
+        cadetDAO.disassociate(cadetId, vehicleId);
+        
+    }
     
     public boolean vehiclesExists(List<Long> vehiclesId) {
         for (Long vehicleId : vehiclesId) {
@@ -187,6 +202,13 @@ public class CadetBean {
             throw new CadetException(EMAIL_EXISTS);
         }
         return oldCadetDTO;
+    }
+
+    public void remove(Long id) throws CadetException {
+        if (!cadetIdExists(id)){
+            throw new CadetException(CADET_ID_DOES_NOT_EXISTS);
+        }
+        cadetDAO.removeCadet(id);
     }
 
     

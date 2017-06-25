@@ -16,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,6 +40,8 @@ public class CadetResource {
     
     @Context
     private UriInfo context;
+    
+    private static final String SUCCESSFUL_OPERATION = " Operation completed successfully";
 
     /**
      * Creates a new instance of CadetResource
@@ -211,5 +214,68 @@ public class CadetResource {
         }
         return response;
   
+    }
+    @PUT
+    @Path("/{cadetId}/removeVehicle/{vehicleId}")
+    public Response quitarVehiculo(@PathParam("cadetId") Long cadetId, @PathParam("vehicleId") Long vehicleId) {
+        StringBuilder message;
+        Response response;
+        try {
+            cadetBean.removeVehicle(cadetId, vehicleId);
+            response = Response.status(Response.Status.OK).entity(SUCCESSFUL_OPERATION).build();
+        } catch (JsonSyntaxException e) {
+            message = new StringBuilder();
+            message.append("[Message Syntax error gson]");
+            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(message.toString())
+                    .build();
+        } catch (JsonIOException e) {
+            message = new StringBuilder();
+            message.append("[Message IO error gson]");
+            message.append(e.getMessage());
+            //TODO: Add log here
+            //log.error(message);
+            response = Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(message.toString())
+                    .build();
+        } catch (CadetException e) {
+            message = new StringBuilder();
+            message.append("[Message Cadet Exception]");
+            message.append(e.getMessage());
+            response =  Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(message.toString())
+                    .build();
+        }
+        return response;
+    }
+
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @DELETE
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response remove(@PathParam("id") Long id) {
+        StringBuilder message;
+        Response response;
+        try {
+            cadetBean.remove(id);
+            response = Response.ok().build();
+        } catch (CadetException e) {
+            message = new StringBuilder();
+            message.append("[Message Cadet Exception]: ");
+            message.append(e.getMessage());
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
+        }
+        return response;
     }
 }

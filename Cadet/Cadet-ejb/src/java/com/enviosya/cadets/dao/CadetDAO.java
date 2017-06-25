@@ -133,6 +133,23 @@ public class CadetDAO extends BaseDAO{
             return emailExists(email);
         }
     }
+    
+    public void removeCadet (Long id) {
+        CadetEntity cadet = (CadetEntity) find(id);
+        remove (cadet);
+    }
+
+    public void disassociate(Long cadetId, Long vehicleId) {
+        try {
+            CadetEntity cadet = (CadetEntity) find(cadetId);
+            VehicleEntity vehicleToRemove = entityManager.find(VehicleEntity.class, vehicleId);
+            cadet.getVehicles().remove(vehicleToRemove);
+            edit(cadet);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
 
      
     
