@@ -7,6 +7,7 @@ package com.enviosya.clients.dao;
 
 import com.enviosya.clients.dto.ClientDTO;
 import com.enviosya.clients.entities.ClientEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,7 +41,7 @@ public class ClientDao extends BaseDao{
         return toDTO(clientEntity);
     }
 
-    private ClientEntity toEntity(ClientDTO clientDTO) {
+    public ClientEntity toEntity(ClientDTO clientDTO) {
         ClientEntity entity = new ClientEntity();
         entity.setDocument(clientDTO.getDocument());
         entity.setName(clientDTO.getName());
@@ -50,7 +51,7 @@ public class ClientDao extends BaseDao{
         return entity;
     }
     
-     private ClientDTO toDTO(ClientEntity entity) {
+    public ClientDTO toDTO(ClientEntity entity) {
         ClientDTO clientDTO;
         clientDTO = new ClientDTO(entity.getId(), entity.getDocument(), entity.getName(), entity.getLastName(), 
         entity.getPaymentMethod(), entity.getEmail());
@@ -76,6 +77,15 @@ public class ClientDao extends BaseDao{
         ClientEntity client = toEntity(clientDTO);
         ClientEntity originalClient = entityManager.find(ClientEntity.class, client.getId());
         entityManager.remove(originalClient);
+    }
+
+    public List<ClientEntity> getClients() {
+        try {
+            List<ClientEntity> clients = (List<ClientEntity>) this.findAll();
+            return clients;
+        } catch (Exception e) {
+            throw e;
+        }
     }
     
     

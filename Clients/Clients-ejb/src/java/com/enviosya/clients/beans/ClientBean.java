@@ -10,6 +10,8 @@ import com.enviosya.clients.dao.ClientDao;
 import com.enviosya.clients.dto.ClientDTO;
 import com.enviosya.clients.entities.ClientEntity;
 import com.enviosya.clients.exceptions.ClientException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ejb.EJB;
@@ -25,7 +27,19 @@ import javax.ws.rs.core.Response;
 @LocalBean
 public class ClientBean {
     
-private static final String ENTIDAD_NULA = "La entidad es nula";
+private static final String NULL_ENTITY = "The client entity is null";
+
+private static final String NULL_VALUES = "The client has null values";
+
+private static final String INVALID_EMAIL = "The client has invalid email";
+
+private static final String EMAIL_ALREADY_EXISTS = "The email already exists";
+
+private static final String DOCUMENT_ALREADY_EXISTS = "The document already exists";
+
+private static final String CLIENT_NOT_EXISTS = "The client doesn't exist";
+
+private static final String NO_RESULTS = "No results for that query";
 
     @EJB
     private ClientDao clientDAO;
@@ -33,19 +47,19 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
     public ClientDTO create(ClientDTO clientDTO) throws ClientException{
         //TODO: check that the user is logged in
         if(clientDTO == null){
-            throw new ClientException("Invalid client.");
+            throw new ClientException(NULL_ENTITY);
         }
         if(nullValuesInCadetExist(clientDTO)){
-            throw new ClientException("Missing required fields.");
+            throw new ClientException(NULL_VALUES);
         }
         if(!isEmailValid(clientDTO.getEmail())){
-            throw new ClientException("Invalid email");
+            throw new ClientException(INVALID_EMAIL);
         }
         if(documentExists(clientDTO.getDocument())){
-            throw new ClientException("Document already in use.");
+            throw new ClientException(DOCUMENT_ALREADY_EXISTS);
         }
         if(emailExists(clientDTO.getEmail())){
-            throw new ClientException("Email already in use.");
+            throw new ClientException(EMAIL_ALREADY_EXISTS);
         }
         
         clientDTO = clientDAO.create(clientDTO);
@@ -56,16 +70,16 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
     public ClientDTO modify(ClientDTO clientDTO) throws ClientException{
         //chequear si el usuario esta logueado
         if(clientDTO == null){
-            throw new ClientException("Invalid cadet.");
+            throw new ClientException(NULL_ENTITY);
         }
         if(nullValuesInCadetExist(clientDTO)){
-            throw new ClientException("Missing required fields.");
+            throw new ClientException(NULL_VALUES);
         }
         if(!isEmailValid(clientDTO.getEmail())){
-            throw new ClientException("Invalid email");
+            throw new ClientException(INVALID_EMAIL);
         }
         if(!documentExists(clientDTO.getDocument())){
-            throw new ClientException("You have to modify an existing client.");
+            throw new ClientException(CLIENT_NOT_EXISTS);
         }
         clientDTO = clientDAO.modify(clientDTO);
         
@@ -76,23 +90,33 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
         //chequear si el usuario esta logueado
         
         if(!documentExists(clientDTO.getDocument())){
-            throw new ClientException("You have to delete an existing client.");
+            throw new ClientException(CLIENT_NOT_EXISTS);
         }       
         clientDAO.delete(clientDTO);
     }
     
-    public Response associatePaymentMethod(Long idClient, Long idPaymentMethod) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    public Response searchById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
-    public Response getClientList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public List<ClientDTO> getClientList() throws Exception{
+        // Chequear si esta logueado
+        try {
+        
+            List<ClientEntity> clients = clientDAO.getClients();
+            
+            List<ClientDTO> clientsDTO = new ArrayList<ClientDTO>();
 
-    
+            clients.forEach((client) -> {
+                clientsDTO.add(clientDAO.toDTO(client));
+            });
+            
+            return clientsDTO;
+
+        } catch (Exception e) {
+            
+            throw e;
+        
+        }
+        
+    }
 
      private boolean nullValuesInCadetExist(ClientDTO clientDTO) {
         return clientDTO.getName() == null || clientDTO.getName().isEmpty() || clientDTO.getLastName() == null
@@ -115,4 +139,22 @@ private static final String ENTIDAD_NULA = "La entidad es nula";
         return clientDAO.emailExists(email);
     }
 
+    public ClientDTO getClientById(Long id) throws ClientException {
+        //chequear si el usuario esta logueado
+        if(id == null){
+            throw new ClientException(NULL_ENTITY);
+        }
+        
+        ClientEntity clientEntity = clientDAO.find(id);
+        
+        if(clientEntity == null){
+            
+            throw new ClientException(CLIENT_NOT_EXISTS);    
+            
+        }
+        
+        ClientDTO clienteDTO = clientDAO.toDTO(clientEntity);
+        
+        return clienteDTO;
+    }
 }

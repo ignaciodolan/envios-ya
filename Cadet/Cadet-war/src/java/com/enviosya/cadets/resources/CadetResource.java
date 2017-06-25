@@ -69,7 +69,8 @@ public class CadetResource {
             CadetDTO cadetDTO = gson.fromJson(cadetJSON, CadetDTO.class);
             cadetDTO = cadetBean.create(cadetDTO); 
             message = new StringBuilder();
-            message.append("Se creo exitosamente el cadete: ");
+            message.append("Cadet was created:");
+            message.append(gson.toJson(cadetDTO));
             logger.success(message.toString());
             response = Response.status(Response.Status.CREATED).entity(gson.toJson(cadetDTO)).build();
         } catch (JsonSyntaxException e) {
