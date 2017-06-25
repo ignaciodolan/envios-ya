@@ -17,12 +17,13 @@ import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.ws.rs.core.Response;
 
 @Stateless
 @LocalBean
 public class CadetBean {
     
-    private static final String SUCCESSFUL_OPERATION = " Operation completed successfully";
+    
     
     private static final String NULL_ENTITY = " Entity to build is null";
     
@@ -83,6 +84,7 @@ public class CadetBean {
         cadetDTO = cadetDAO.create(cadetDTO);
         return cadetDTO;
     }
+    
 
     private boolean nullValuesInCadetExist(CadetDTO cadetDTO) {
         return cadetDTO.getName() == null || cadetDTO.getName().isEmpty() || cadetDTO.getLastName() == null
@@ -112,6 +114,13 @@ public class CadetBean {
     private boolean vehicleIdExists (Long id) {
         return vehicleBean.vehicleExists(id);
     }
+     private boolean documentExists(String document, String ignoreDocument) {
+        return cadetDAO.documentExists(document, ignoreDocument);
+    }
+    
+    private boolean emailExists(String email, String ignoreEmail) {
+        return cadetDAO.emailExists(email, ignoreEmail);
+    }
 
     public void addVehicleToCadet(CadetDTO cadetDTO) throws CadetException {
         if (cadetDTO == null){
@@ -129,6 +138,21 @@ public class CadetBean {
         cadetDAO.associateVehicles(cadetDTO);
         
     }
+    public void removeVehicle(Long cadetId, Long vehicleId) throws CadetException {
+        
+        
+        if (cadetId == null || vehicleId == null) {
+            throw new CadetException(EMPTY_FIELDS_TO_REMOVE_VEHICLES);
+        }
+        if (!cadetIdExists(cadetId)) {
+            throw new CadetException(CADET_ID_DOES_NOT_EXISTS);
+        }
+        if (!vehicleIdExists(vehicleId)) {
+            throw new CadetException(VEHICLE_DOES_NOT_EXISTS);
+        }
+        cadetDAO.disassociate(cadetId, vehicleId);
+        
+    }
     
     public boolean vehiclesExists(List<Long> vehiclesId) {
         for (Long vehicleId : vehiclesId) {
@@ -139,5 +163,56 @@ public class CadetBean {
         return true;
     }
 
+    public List<CadetDTO> getCadets() throws CadetException {
+        List<CadetDTO> cadets = cadetDAO.list();
+        if(cadets.isEmpty()){
+           throw new CadetException(NO_SEARCH_RESULTS);
+        }
+        return cadets;
+    }
+
+    public CadetDTO getCadet(Long id) throws CadetException {
+        if (!cadetIdExists(id)) {
+            throw new CadetException(CADET_ID_DOES_NOT_EXISTS);
+        }
+        return cadetDAO.get(id);
+    }
+
+    public CadetDTO modify(CadetDTO cadetDTO, Long id) throws CadetException {
+        if (cadetDTO == null){
+            throw new CadetException(NULL_ENTITY);
+        }
+        if(nullValuesInCadetExist(cadetDTO)){
+            throw new CadetException(REQUIRED_BLANK_FIELDS);
+        }
+        if(!isEmailValid(cadetDTO.getEmail())){
+            throw new CadetException(EMAIL_INVALID_FORMAT);
+        }
+        
+        if (!cadetIdExists(id)) {
+            throw new CadetException(CADET_ID_DOES_NOT_EXISTS);
+        }
+        
+        CadetDTO oldCadetDTO = cadetDAO.modify(cadetDTO,id);
+        
+        if(documentExists(cadetDTO.getDocument(), oldCadetDTO.getDocument())){
+            throw new CadetException(CADET_DOCUMENT_EXISTS);
+        }
+        if(emailExists(cadetDTO.getEmail(), oldCadetDTO.getEmail())){
+            throw new CadetException(EMAIL_EXISTS);
+        }
+        return oldCadetDTO;
+    }
+
+    public void remove(Long id) throws CadetException {
+        if (!cadetIdExists(id)){
+            throw new CadetException(CADET_ID_DOES_NOT_EXISTS);
+        }
+        cadetDAO.removeCadet(id);
+    }
+    
+    public List<CadetDTO> getNearbyCadets(Long latitude, Long length) throws CadetException {
+        return cadetDAO.getNearbyCadets(latitude, length);
+    }
     
 }
