@@ -152,7 +152,7 @@ public class CadetResource {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response modificar(@PathParam("id") Long id, String messageJson) {
+    public Response modify(@PathParam("id") Long id, String messageJson) {
         StringBuilder message;
         Response response;
         try {
@@ -235,7 +235,7 @@ public class CadetResource {
     }
     @PUT
     @Path("/{cadetId}/removeVehicle/{vehicleId}")
-    public Response quitarVehiculo(@PathParam("cadetId") Long cadetId, @PathParam("vehicleId") Long vehicleId) {
+    public Response removeVehicle(@PathParam("cadetId") Long cadetId, @PathParam("vehicleId") Long vehicleId) {
         StringBuilder message;
         Response response;
         try {
