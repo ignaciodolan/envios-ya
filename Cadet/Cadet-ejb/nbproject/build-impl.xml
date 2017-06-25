@@ -793,17 +793,17 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="compile,-library-inclusion-in-archive-weblogic,-library-inclusion-in-archive-by-user" name="library-inclusion-in-archive"/>
     <target if="is.jars.in.ejbjar" name="-library-inclusion-in-archive-by-user">
-        <copyfiles files="${libs.libraries.classpath}" todir="${build.classes.dir}"/>
+        <copyfiles files="${file.reference.m7a-obli-CarusoDolanGuichon-libraries}" todir="${build.classes.dir}"/>
     </target>
     <target if="is.server.weblogic" name="-library-inclusion-in-archive-weblogic">
-        <basename file="${libs.libraries.classpath}" property="manifest.libs.libraries.classpath"/>
+        <basename file="${file.reference.m7a-obli-CarusoDolanGuichon-libraries}" property="manifest.file.reference.m7a-obli-CarusoDolanGuichon-libraries"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
             <attribute name="Extension-List" value="jar-1 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.libs.libraries.classpath}"/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.file.reference.m7a-obli-CarusoDolanGuichon-libraries}"/>
         </manifest>
     </target>
     <target depends="compile" name="library-inclusion-in-manifest">
-        <copyfiles files="${libs.libraries.classpath}" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.m7a-obli-CarusoDolanGuichon-libraries}" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update"/>
     </target>
     <target name="-copy-meta-inf">

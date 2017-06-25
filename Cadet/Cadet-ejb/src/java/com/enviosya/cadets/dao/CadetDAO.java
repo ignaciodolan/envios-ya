@@ -23,15 +23,15 @@ public class CadetDAO extends BaseDAO{
         return entityManager;
     }
     
-    
+
     public CadetEntity get (Long cadetId) {
         return (CadetEntity) find(cadetId);
     }
-    
+
     public boolean idExists(Long cadetId) {
         return get(cadetId) != null;
     }
-    
+
     public boolean emailExists(String email){
         return !findByAttribute(email, "email").isEmpty();
     }
@@ -54,13 +54,13 @@ public class CadetDAO extends BaseDAO{
         entity.setLastName(cadetDTO.getLastName());
         return entity;
     }
-    
+
      private CadetDTO toDTO(CadetEntity entity) {
         CadetDTO cadetDTO = new CadetDTO(entity.getId(), entity.getDocument(),
                 entity.getName(),entity.getLastName(),entity.getEmail());
         return cadetDTO;
     }
-     
+
     public void associateVehicles(CadetDTO cadetDTO) {
       try {
           Long cadetId = cadetDTO.getId();
@@ -77,6 +77,6 @@ public class CadetDAO extends BaseDAO{
       }
     }
 
-     
-    
+
+
 }
