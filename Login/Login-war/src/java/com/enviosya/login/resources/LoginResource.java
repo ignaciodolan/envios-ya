@@ -25,28 +25,25 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- * REST Web Service
- *
- * @author Ruso
- */
+
 @Path("login")
 public class LoginResource {
-
-    private final LoggerEnviosYa logger = new LoggerEnviosYa(LoginResource.class);
-
+    
+    
     @EJB
     private LoginBean loginBean;
+
+    private final LoggerEnviosYa logger = new LoggerEnviosYa(LoginResource.class);
+    
+    @Context
+    private UriInfo context;
+
 
     private final Gson gson = new Gson();
 
     public LoginResource() {
     }
 
-    /**
-     * Retrieves representation of an instance of com.enviosya.login.resources.LoginResource
-     * @return an instance of java.lang.String
-     */
     @GET
     @Path("/{id}/verifyToken/{token}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -54,7 +51,7 @@ public class LoginResource {
         StringBuilder message;
         Response response;
         try {
-            loginBean.verifyToken(token, id);
+//            loginBean.verifyToken(token, id);
             message = new StringBuilder();
             message.append("Token verification:");
             message.append(gson.toJson(token));
@@ -117,6 +114,12 @@ public class LoginResource {
         } catch (JsonIOException e) {
             message = new StringBuilder();
             message.append("[Message IO error gson]");
+            message.append(e.getMessage());
+            logger.error(message.toString());
+            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
+        } catch (Exception e) {
+            message = new StringBuilder();
+            message.append("[Exception]: ");
             message.append(e.getMessage());
             logger.error(message.toString());
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
