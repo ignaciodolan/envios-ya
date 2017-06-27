@@ -20,22 +20,30 @@ public class ClientDTO {
     private String lastName;
     private String email;
     private String paymentMethod;
+    private String creditCardNumber; 
+    private String cvc;
     
-    public ClientDTO(Long id, String document, String name, String lastname, String payments, String email) {
+    public ClientDTO(Long id, String document, String name, String lastname, 
+            String payments, String email, String creditCardNumber, String cvc) {
         this.id = id;
         this.document = document;
         this.name = name;
         this.lastName = lastname;
         this.email = email;
         this.paymentMethod = payments;
+        this.creditCardNumber = creditCardNumber;
+        this.cvc = cvc;
     }
     
-    public ClientDTO(String document, String name, String lastname, String payments, String email) {
+    public ClientDTO(String document, String name, String lastname, 
+            String payments, String email, String creditCardNumber, String cvc) {
         this.document = document;
         this.name = name;
         this.lastName = lastname;
         this.email = email;
         this.paymentMethod = payments;
+        this.creditCardNumber = creditCardNumber;
+        this.cvc = cvc;
     }
     
     public Long getId() {
@@ -85,4 +93,21 @@ public class ClientDTO {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
+
+    public void setCreditCardNumber(String creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
+    }
+
+    public String getCvc() {
+        return cvc;
+    }
+
+    public void setCvc(String cvc) {
+        this.cvc = cvc;
+    }
+    
 }

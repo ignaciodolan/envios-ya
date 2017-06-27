@@ -51,7 +51,6 @@ public class ClientResource {
             message.append("Client was created: ");
             message.append(gson.toJson(clienteDTO));
             logger.success(message.toString());
-            response =  Response.ok(clienteDTO).build();
             response = Response.status(Response.Status.CREATED).entity(gson.toJson(clienteDTO)).build();
         } catch (JsonSyntaxException e) {
             message = new StringBuilder();

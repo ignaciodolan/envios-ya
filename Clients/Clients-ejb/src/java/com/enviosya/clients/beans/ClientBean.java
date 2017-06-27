@@ -62,13 +62,24 @@ private static final String NO_RESULTS = "No results for that query";
             throw new ClientException(EMAIL_ALREADY_EXISTS);
         }
         
+        Encryptor encryptor = new Encryptor();
+        if (clientDTO.getCreditCardNumber() != null) {
+            String encryptedCreditCardNumber = encryptor.encrypt(clientDTO.getCreditCardNumber());
+            clientDTO.setCreditCardNumber(encryptedCreditCardNumber);
+        }
+        
+        if (clientDTO.getCvc() != null) {
+            String encryptedCvc = encryptor.encrypt(clientDTO.getCvc());
+            clientDTO.setCvc(encryptedCvc);
+        }
+            
         clientDTO = clientDAO.create(clientDTO);
         
         return clientDTO;
     }
     
     public ClientDTO modify(ClientDTO clientDTO) throws ClientException{
-        //chequear si el usuario esta logueado
+        //chequear si el usuario esta logueado        
         if(clientDTO == null){
             throw new ClientException(NULL_ENTITY);
         }
@@ -78,8 +89,19 @@ private static final String NO_RESULTS = "No results for that query";
         if(!isEmailValid(clientDTO.getEmail())){
             throw new ClientException(INVALID_EMAIL);
         }
+        //Esto esta mal arreglar como está en cadetes
         if(!documentExists(clientDTO.getDocument())){
             throw new ClientException(CLIENT_NOT_EXISTS);
+        }
+        Encryptor encryptor = new Encryptor();
+        if (clientDTO.getCreditCardNumber() != null) {
+            String encryptedCreditCardNumber = encryptor.encrypt(clientDTO.getCreditCardNumber());
+            clientDTO.setCreditCardNumber(encryptedCreditCardNumber);
+        }
+        
+        if (clientDTO.getCvc() != null) {
+            String encryptedCvc = encryptor.encrypt(clientDTO.getCvc());
+            clientDTO.setCvc(encryptedCvc);
         }
         clientDTO = clientDAO.modify(clientDTO);
         
