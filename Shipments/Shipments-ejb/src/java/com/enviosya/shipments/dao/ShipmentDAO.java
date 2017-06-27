@@ -21,44 +21,40 @@ public class ShipmentDAO extends BaseDAO{
         return entityManager;
     }
     
-    public ShipmentEntity get (Long cadetId) {
-        return (ShipmentEntity) find(cadetId);
+    public ShipmentEntity get (Long shipmentId) {
+        return (ShipmentEntity) find(shipmentId);
     }
 
-    public boolean idExists(Long cadetId) {
-        return get(cadetId) != null;
-    }
-
-    public boolean emailExists(String email){
-        return !findByAttribute(email, "email").isEmpty();
-    }
-    
-    public boolean documentExists(String document){
-        return  !findByAttribute(document, "document").isEmpty();
+    public boolean idExists(Long shipmentId) {
+        return get(shipmentId) != null;
     }
 
     public ShipmentDTO create(ShipmentDTO shipmentDTO) {
-        ShipmentEntity cadetEntity = toEntity(shipmentDTO);
-        cadetEntity = (ShipmentEntity) persist(cadetEntity);
-        return toDTO(cadetEntity);
+        ShipmentEntity shipmentEntity = toEntity(shipmentDTO);
+        shipmentEntity = (ShipmentEntity) persist(shipmentEntity);
+        return toDTO(shipmentEntity);
     }
 
     private ShipmentEntity toEntity(ShipmentDTO shipmentDTO) {
         ShipmentEntity entity = new ShipmentEntity();
-        entity.setDocument(shipmentDTO.getDocument());
-        entity.setName(shipmentDTO.getName());
-        entity.setEmail(shipmentDTO.getEmail());
-        entity.setLastName(shipmentDTO.getLastName());
+        entity.setDescription(shipmentDTO.getDescription());
+        entity.setClientSender(shipmentDTO.getClientSender());
+        entity.setClientReceiver(shipmentDTO.getClientReceiver());
+        entity.setAddressReceiver(shipmentDTO.getAddressReceiver());
+        entity.setAddressSender(shipmentDTO.getAddressSender());
+        entity.setCadet(shipmentDTO.getCadet());
+        entity.setPackagePhoto(shipmentDTO.getPackagePhoto());
+        entity.setCost(shipmentDTO.getCost());
+        entity.setComission(shipmentDTO.getComission());
         return entity;
     }
 
      private ShipmentDTO toDTO(ShipmentEntity entity) {
-        ShipmentDTO shipmentDTO = new ShipmentDTO(entity.getId(), entity.getDocument(),
-                entity.getName(),entity.getLastName(),entity.getEmail());
+        ShipmentDTO shipmentDTO = new ShipmentDTO(entity.getId(), 
+                entity.getDescription(), entity.getClientSender(), entity.getClientReceiver(),
+                entity.getAddressSender(), entity.getAddressReceiver(), entity.getCadet(), entity.getPackagePhoto(),  entity.getCost(), entity.getComission());
         return shipmentDTO;
     }
 
-    public boolean idExists(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
+ 

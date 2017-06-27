@@ -4,6 +4,7 @@ import com.enviosya.logger.LoggerEnviosYa;
 import com.enviosya.shipments.dao.ShipmentDAO;
 import com.enviosya.shipments.domain.PackageNormal;
 import com.enviosya.shipments.dto.CadetDTO;
+import com.enviosya.shipments.dto.InitialShipmentDTO;
 import com.enviosya.shipments.dto.ShipmentDTO;
 import com.enviosya.shipments.entities.ShipmentEntity;
 import com.enviosya.shipments.exceptions.CadetDistanceException;
@@ -41,11 +42,12 @@ public class ShipmentBean {
     
     private static final String URL_PACKAGE_DIMENSIONS = "https://ort-arqsoftort-sizer.herokuapp.com/";
     
-    private static final String URL_CADETS = "http://localhost:8080/Cadet-war/cadet";
+    private static final String URL_CADETS = "http://localhost:8080/Cadet-war/cadet/nearby/{latitude}/{length}";
     
     private static final String SUCCESSFUL_OPERATION = " Operation completed successfully";
     
     private static final String NULL_ENTITY = " Entity to build is null";
+    
     
     private static final String REQUIRED_BLANK_FIELDS
             = " The operation could not be completed because there are required fields empty";
@@ -54,20 +56,28 @@ public class ShipmentBean {
     
     private static final String NOT_AUTHENTICATED_USER = " Invalid user or token";
     
-    private static final int DISTANCE_RADIO = 100;
+    private static final String LATITUDE = "100";
+    
+    private static final String LENGTH = "100";
 
-    public List<String> create(ShipmentDTO shipmentDTO) throws ShipmentException {
-        List<String> cadetsId = null;
+    public InitialShipmentDTO create(ShipmentDTO shipmentDTO) throws ShipmentException {
+        List<Long> cadetsId = null;
+        InitialShipmentDTO initialShipmentDTO = null;
+        if(shipmentDTO == null){
+            throw new ShipmentException(NULL_ENTITY);
+        }
+        if(nullValuesInShipmentExist(shipmentDTO)){
+            throw new ShipmentException(REQUIRED_BLANK_FIELDS);
+        }
         try {
-            // Calcular costo
             Double cost = null;
             
-            cost = this.calculateShipmentCost(shipmentDTO.getPackagePhoto());
+            cost = calculateShipmentCost(shipmentDTO.getPackagePhoto());
+            shipmentDTO.setCost(cost);
             
-            // Agarrar 4 cadetes cercanos
             try { 
                 
-                cadetsId = this.getCadetsByDistance(4, DISTANCE_RADIO);
+                cadetsId = getCadetsByDistance();
                 
             } catch (CadetDistanceException exception){
                 StringBuilder message = new StringBuilder();
@@ -77,7 +87,12 @@ public class ShipmentBean {
                 throw new ShipmentException(message.toString());                
             }
             
-            // Persistir envio
+            //Falta calcular comision (?)
+            
+            shipmentDTO = shipmentDAO.create(shipmentDTO);
+            initialShipmentDTO = new InitialShipmentDTO(shipmentDTO);
+            initialShipmentDTO.setCadetList(cadetsId);
+            
             
         } catch (CalculateCostException exception) {
             StringBuilder message = new StringBuilder();
@@ -87,7 +102,12 @@ public class ShipmentBean {
             throw new ShipmentException(message.toString());
         }
         
-        return cadetsId;
+        return initialShipmentDTO;
+    }
+    
+    private boolean nullValuesInShipmentExist(ShipmentDTO shipmentDTO) {
+        return shipmentDTO.getDescription() == null || shipmentDTO.getAddressReceiver() == null 
+                || shipmentDTO.getAddressSender() == null  || shipmentDTO.getPackagePhoto()  == null;
     }
     
     private Double calculateShipmentCost(String packagePhoto) throws CalculateCostException {
@@ -119,19 +139,23 @@ public class ShipmentBean {
         return  cost;
     }
 
-    private List<String> getCadetsByDistance(int cadetsQuantity, int distanceRadio) throws CadetDistanceException{
-        List<String> cadetsIdList = null;
-        String cadetsJson = this.getJsonFromAPI(URL_CADETS,"GET",null);
+    private List<Long> getCadetsByDistance() throws CadetDistanceException{
+        List<Long> cadetsIdList = null;
+        String urlNearbyCadets = URL_CADETS;
+        urlNearbyCadets = urlNearbyCadets.replace("{latitude}", LATITUDE);
+        urlNearbyCadets = urlNearbyCadets.replace("{length}", LENGTH);
+        String cadetsJson = this.getJsonFromAPI(urlNearbyCadets,"GET",null);
         Type listCadetDTOType = new TypeToken<List<CadetDTO>>(){}.getType();
         List<CadetDTO> cadetList = (List<CadetDTO>) gson.fromJson(cadetsJson, listCadetDTOType);
         
         for (CadetDTO cadet : cadetList) {
-            cadetsIdList.add(cadet.getId().toString());
+            cadetsIdList.add(cadet.getId());
         }
         
         if(cadetsIdList.isEmpty()){
             throw new CadetDistanceException("There are no cadets available");
         }
+        
         return cadetsIdList;
     }
     
@@ -148,7 +172,7 @@ public class ShipmentBean {
                     OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
                     outputStreamWriter.write(request);
                     outputStreamWriter.flush();
-                    connection.setRequestMethod("POST");
+                    connection.setRequestMethod(method);
                     connection.setRequestProperty("Content-Type", "application/json");
                     connection.setRequestProperty("X-Mashape-Key", "<required>");
                     connection.setRequestProperty("Accept", "application/json");

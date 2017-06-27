@@ -1,28 +1,42 @@
 package com.enviosya.shipments.dto;
 
-public class ShipmentDTO {
+import java.util.List;
+
+public class InitialShipmentDTO {
     private Long id;
     private String description;
     private Long clientSender;
     private Long clientReceiver;
     private String addressSender;
     private String addressReceiver;
-    private Long cadet;
+    private List<Long> cadetList;
     private String packagePhoto;
     private Double comission;
     private Double cost;
     
-    public ShipmentDTO(Long id, String description, Long clientSender, Long clientReceiver, String addressSender, String addressReceiver, Long cadet, String packagePhoto, Double cost, Double comission) {
+    public InitialShipmentDTO(Long id, String description, Long clientSender, Long clientReceiver, String addressSender, String addressReceiver, Long cadet, String packagePhoto, Double cost, Double comission,  List<Long> cadetsIds) {
         this.id = id;
         this.description = description;
         this.clientSender = clientSender;
         this.clientReceiver = clientReceiver;
         this.addressSender = addressSender;        
-        this.addressSender = addressSender;
-        this.cadet = cadet;
+        this.addressReceiver = addressReceiver;
+        this.cadetList = cadetsIds;
         this.packagePhoto = packagePhoto;
         this.comission = comission;
         this.cost = cost;
+    }
+
+    public InitialShipmentDTO(ShipmentDTO shipmentDTO) {
+        this.id = shipmentDTO.getId();
+        this.description = shipmentDTO.getDescription();
+        this.clientSender = shipmentDTO.getClientSender();
+        this.clientReceiver = shipmentDTO.getClientReceiver();
+        this.addressSender = shipmentDTO.getAddressSender();        
+        this.addressReceiver = shipmentDTO.getAddressReceiver();
+        this.packagePhoto = shipmentDTO.getPackagePhoto();
+        this.comission = shipmentDTO.getComission();
+        this.cost = shipmentDTO.getCost();
     }
 
 
@@ -82,12 +96,12 @@ public class ShipmentDTO {
         this.addressReceiver = addressReceiver;
     }
 
-    public Long getCadet() {
-        return cadet;
+    public List<Long> getCadetList() {
+        return cadetList;
     }
 
-    public void setCadet(Long cadet) {
-        this.cadet = cadet;
+    public void setCadetList(List<Long> cadetList) {
+        this.cadetList = cadetList;
     }
 
     public Double getComission() {

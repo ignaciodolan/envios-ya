@@ -1,4 +1,4 @@
-package com.enviosya.cadets.dto;
+package com.enviosya.shipments.dto;
 
 public class VehicleDTO {
     private long id;
