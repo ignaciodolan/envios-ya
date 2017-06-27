@@ -71,6 +71,7 @@ public class LoginResource {
     }
     
     @POST
+    @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response doLogin(String messageJson) {
         StringBuilder message;

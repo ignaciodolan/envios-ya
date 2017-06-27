@@ -34,6 +34,38 @@ public class LoginEntity implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date endDate;
 
+    public String getUser() {
+        return _user;
+    }
+
+    public void setUser(String _user) {
+        this._user = _user;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
     public LoginEntity() {
     }
 
