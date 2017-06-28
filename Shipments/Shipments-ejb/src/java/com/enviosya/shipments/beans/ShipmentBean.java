@@ -56,6 +56,10 @@ public class ShipmentBean {
     private static final String LATITUDE = "100";
     
     private static final String LENGTH = "100";
+    
+    private static final int STATUS_SENT = 0;
+    
+    private static final int STATUS_RECEIVED = 1;
 
     public InitialShipmentDTO create(ShipmentDTO shipmentDTO) throws ShipmentException, Exception {
         List<Long> cadetsId = null;
@@ -223,5 +227,26 @@ public class ShipmentBean {
             return response.toString();
     }
 
+    public ShipmentDTO addCadetToShipment(Long shipmentId, Long cadetId) throws ShipmentException {
+        if(shipmentId == null){
+            throw new ShipmentException(NULL_ENTITY);
+        }
+        if(cadetId == null){
+            throw new ShipmentException(NULL_ENTITY);
+        }
+        ShipmentDTO shipmentDTO = shipmentDAO.addCadetToShipment(shipmentId, cadetId); 
+        return shipmentDTO;
+    }
+    
+    
+    public ShipmentDTO confirmShipmentReceived(Long shipmentId) throws ShipmentException {
+        // Check if the user is logged
+        if(shipmentId == null){
+            throw new ShipmentException(NULL_ENTITY);
+        }
+        ShipmentDTO shipmentDTO = shipmentDAO.changeShipmentStatus(shipmentId, STATUS_RECEIVED);
+        //ENCOLAR MENSAJE!! NOTIFIACIONES !!
+        return shipmentDTO;
+    }
 
 }

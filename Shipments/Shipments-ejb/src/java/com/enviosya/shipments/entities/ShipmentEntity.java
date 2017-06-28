@@ -28,11 +28,14 @@ public class ShipmentEntity implements Serializable {
     private Long cadet;
     private Double cost;
     private Double comission;
+    private int status;
     
     @Column(length = 4096)
     private String packagePhoto;
 
-    public ShipmentEntity(String description, Long clientSender, Long clientReceiver, String addressSender, String addressReceiver, Long cadet, String packagePhoto, Double cost, Double comission) {
+    public ShipmentEntity(String description, Long clientSender, Long clientReceiver,
+            String addressSender, String addressReceiver, Long cadet, String packagePhoto,
+            Double cost, Double comission, int status) {
         this.description = description;
         this.clientSender = clientSender;
         this.clientReceiver = clientReceiver;
@@ -42,6 +45,7 @@ public class ShipmentEntity implements Serializable {
         this.packagePhoto = packagePhoto;
         this.comission = comission;
         this.cost = cost;
+        this.status = status;
     }
 
     public ShipmentEntity() {

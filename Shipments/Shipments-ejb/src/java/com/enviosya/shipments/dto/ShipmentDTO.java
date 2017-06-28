@@ -11,8 +11,11 @@ public class ShipmentDTO {
     private String packagePhoto;
     private Double comission;
     private Double cost;
+    private int status;
     
-    public ShipmentDTO(Long id, String description, Long clientSender, Long clientReceiver, String addressSender, String addressReceiver, Long cadet, String packagePhoto, Double cost, Double comission) {
+    public ShipmentDTO(Long id, String description, Long clientSender,
+            Long clientReceiver, String addressSender, String addressReceiver,
+            Long cadet, String packagePhoto, Double cost, Double comission, int status) {
         this.id = id;
         this.description = description;
         this.clientSender = clientSender;
@@ -23,6 +26,7 @@ public class ShipmentDTO {
         this.packagePhoto = packagePhoto;
         this.comission = comission;
         this.cost = cost;
+        this.status = status;
     }
 
 
@@ -104,6 +108,14 @@ public class ShipmentDTO {
 
     public void setCost(Double cost) {
         this.cost = cost;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
     
 }
