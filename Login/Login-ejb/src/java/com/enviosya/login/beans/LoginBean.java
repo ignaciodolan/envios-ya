@@ -69,46 +69,5 @@ public class LoginBean {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         return loginDAO.activeUserToken(calendar.getTime(), token);
-    }
-
-    
-//    public Response agregarUsuario(String usuario, String clave, String esAdmin) {
-//        if (StringUtils.isBlank(usuario) || StringUtils.isBlank(clave)) {
-//            return Response.status(Response.Status.BAD_REQUEST).entity(CAMPOS_VACIOS).build();
-//        }
-//
-//        if (usuarioYaSeEncuentraRegistrado(usuario)) {
-//            return Response.status(Response.Status.BAD_REQUEST).entity(USUARIO_YA_REGISTRADO).build();
-//        }
-//        String claveEncriptadaConMD5 = DigestUtils.md5Hex(clave);
-//        String esAdministrador = StringUtils.isBlank(esAdmin) ? "N" : esAdmin;
-//        LoginUsuarioEntidad usuarioEntidad = new LoginUsuarioEntidad(usuario, claveEncriptadaConMD5, esAdministrador);
-//        loginDAO.agregarUsuario(usuarioEntidad);
-//        return Response.status(Response.Status.CREATED).entity(OPERACION_EXITOSA).build();
-//    }
-//
-//    private boolean usuarioYaSeEncuentraRegistrado(String usuario) {
-//        return loginDAO.validarUsuario(usuario);
-//    }
-//
-//    
-//    public void registrarAccesoNoAutorizado(String usuario, String clave) {
-//        String claveEncriptadaConMD5 = DigestUtils.md5Hex(clave);
-//        LoginAuditoriaEntidad loginEntidad = new LoginAuditoriaEntidad(usuario, claveEncriptadaConMD5, new Date(), "N");
-//        loginDAO.agregarLoginNoAutenticado(loginEntidad);
-//    }
-//    
-//    public void registrarAccesoAutorizado(String usuario, String clave) {
-//        String claveEncriptadaConMD5 = DigestUtils.md5Hex(clave);
-//        LoginAuditoriaEntidad loginEntidad = new LoginAuditoriaEntidad(usuario, claveEncriptadaConMD5, new Date(), "S");
-//        loginDAO.agregarLoginAutenticado(loginEntidad);
-//    }
-//
-//    public Response esAdministrador(String nombreUsuario) {
-//        if (loginDAO.esAdministrador(nombreUsuario)) {
-//            return Response.status(Response.Status.CREATED).entity("Es administrador").build();   
-//        }
-//        return Response.status(Response.Status.CREATED).entity("No es administrador").build();
-//    }
-
+    }    
 }

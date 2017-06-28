@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.enviosya.login.resources;
 
 import com.enviosya.logger.LoggerEnviosYa;
@@ -94,36 +90,4 @@ public class LoginResource {
         }
         return response;
     }
-
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response register(String messageJson) {
-//        StringBuilder message;
-//        Response response;
-//        try {
-//            //Agarrar los datos de facebook y del json xa realizar el registro.
-//           //loginBean.register();
-//           response = Response.ok().entity(gson.toJson("Register success")).build();
-//        }
-//       catch (JsonSyntaxException e) {
-//            message = new StringBuilder();
-//            message.append("[Message Syntax error gson]");
-//            message.append(e.getMessage());
-//            logger.error(message.toString());
-//            response = Response.status(Response.Status.BAD_REQUEST).entity(message.toString()).build();
-//        } catch (JsonIOException e) {
-//            message = new StringBuilder();
-//            message.append("[Message IO error gson]");
-//            message.append(e.getMessage());
-//            logger.error(message.toString());
-//            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
-//        } catch (Exception e) {
-//            message = new StringBuilder();
-//            message.append("[Exception]: ");
-//            message.append(e.getMessage());
-//            logger.error(message.toString());
-//            response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
-//        }
-//        return response;
-//    }
 }
