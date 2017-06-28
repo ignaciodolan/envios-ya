@@ -3,6 +3,7 @@ package com.enviosya.cadets.dao;
 import com.enviosya.cadets.dto.CadetDTO;
 import com.enviosya.cadets.entities.CadetEntity;
 import com.enviosya.cadets.entities.VehicleEntity;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,9 +24,14 @@ public class CadetDAO extends BaseDAO{
         return entityManager;
     }
     
-
-    public CadetEntity get (Long cadetId) {
-        return (CadetEntity) find(cadetId);
+    
+    public CadetDTO get (Long cadetId) {
+        CadetEntity cadetEntity = (CadetEntity) find(cadetId);
+       if (cadetEntity == null) {
+       return null;
+       } else {
+        return toDTO(cadetEntity);
+       }
     }
 
     public boolean idExists(Long cadetId) {
@@ -63,20 +69,96 @@ public class CadetDAO extends BaseDAO{
 
     public void associateVehicles(CadetDTO cadetDTO) {
       try {
-          Long cadetId = cadetDTO.getId();
-          CadetEntity cadet = get(cadetId);
+          CadetEntity cadetEntity = toEntity(cadetDTO);
           for (Long id : cadetDTO.getVehiclesIds()) {
               VehicleEntity vehicle = entityManager.find(VehicleEntity.class, id);
-              if (!cadet.getVehicles().contains(vehicle)) {
-                  cadet.getVehicles().add(vehicle);
+              if (!cadetEntity.getVehicles().contains(vehicle)) {
+                  cadetEntity.getVehicles().add(vehicle);
               }
           }
-          entityManager.merge(cadet);
+          entityManager.merge(cadetEntity);
       } catch (Exception e) {
           throw e;
       }
     }
+    
+    public List<CadetDTO> list () {
+        List<CadetEntity> cadets;
+        List<CadetDTO> cadetsDTO = new ArrayList<>();
+      try {
+          cadets = findAll();
+          for (CadetEntity cadet: cadets) {
+            cadetsDTO.add(toDTO(cadet));
+        }
+      } catch (Exception e) {
+          throw e;
+      }
+        
+        return cadetsDTO;
+    }
 
+    public CadetDTO modify(CadetDTO cadetDTO, Long id) {
+        CadetEntity cadetEntity;
+        CadetDTO oldCadet = get(id);
+        if (oldCadet == null) {
+            return null;
+        }
+        try {
+            cadetEntity = (CadetEntity) find(id);
+            cadetEntity.setName(cadetDTO.getName());
+            cadetEntity.setLastName(cadetDTO.getLastName());
+            cadetEntity.setDocument(cadetDTO.getDocument());
+            cadetEntity.setEmail(cadetDTO.getEmail());
+            edit(cadetEntity);
+        } catch (Exception e) {
+            throw e;
+        }
+        
+        return toDTO(cadetEntity);
+    }
 
+    public boolean documentExists(String document, String ignoreDocument) {
+        if (document.equals(ignoreDocument)) {
+            return false;
+        } else {
+            return documentExists(document);
+        }   
+    }
 
+    public boolean emailExists(String email, String ignoreEmail) {
+        if (email.equals(ignoreEmail)) {
+            return false;
+        }
+        else {
+            return emailExists(email);
+        }
+    }
+    
+    public void removeCadet (Long id) {
+        CadetEntity cadet = (CadetEntity) find(id);
+        remove (cadet);
+    }
+
+    public void disassociate(Long cadetId, Long vehicleId) {
+        try {
+            CadetEntity cadet = (CadetEntity) find(cadetId);
+            VehicleEntity vehicleToRemove = entityManager.find(VehicleEntity.class, vehicleId);
+            cadet.getVehicles().remove(vehicleToRemove);
+            edit(cadet);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    public List<CadetDTO> getNearbyCadets(Long latitude, Long length) {
+        List<CadetEntity> cadets = entityManager.createQuery("select c from CadetEntity c").setMaxResults(4).getResultList();
+        List<CadetDTO> cadetsDTO = new ArrayList<>();
+        for (CadetEntity cadet: cadets) {
+            cadetsDTO.add(toDTO(cadet));
+        }
+        return cadetsDTO;
+    }
+    
+
+     
 }

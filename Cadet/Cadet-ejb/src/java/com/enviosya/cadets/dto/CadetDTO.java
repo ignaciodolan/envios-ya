@@ -1,6 +1,6 @@
 package com.enviosya.cadets.dto;
 
-import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class CadetDTO {
     private String name;
     private String lastName;
     private String email;
-    @Expose(serialize = false, deserialize = true)
+    
     private List<Long> vehiclesIds;
     private List<VehicleDTO> vehicles;
 

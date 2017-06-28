@@ -15,3 +15,9 @@
 /Clients/Clients-ejb/dist/
 /Clients/build/
 /Clients/Clients-war/dist/
+/Logger/nbproject/private/
+/Logger/Logger-ejb/nbproject/private/
+/Logger/Logger-ejb/build/
+/Logger/Logger-ejb/dist/
+/Logger/build/
+/Logger/dist/
