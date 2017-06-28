@@ -7,13 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
-/**
- *
- * @author Ruso
- */
+
 @Entity
 public class LoginEntity implements Serializable {
 
@@ -22,12 +18,9 @@ public class LoginEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String userName;
-    private String token;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date createdTokenDate;
-    @Temporal(javax.persistence.TemporalType.DATE)
-    private Date tokenExpirationDate;
     private String permission;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date loginDate;
 
     public String getUser() {
         return userName;
@@ -37,30 +30,6 @@ public class LoginEntity implements Serializable {
         this.userName = userName;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Date getStartDate() {
-        return createdTokenDate;
-    }
-
-    public void setStartDate(Date createdTokenDate) {
-        this.createdTokenDate = createdTokenDate;
-    }
-
-    public Date getEndDate() {
-        return tokenExpirationDate;
-    }
-
-    public void setEndDate(Date tokenExpirationDate) {
-        this.tokenExpirationDate = tokenExpirationDate;
-    }
-
     public String getPermission() {
         return permission;
     }
@@ -68,17 +37,23 @@ public class LoginEntity implements Serializable {
     public void setPermission(String permission) {
         this.permission = permission;
     }
+
+    public Date getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
+    }
     
     
 
     public LoginEntity() {
     }
 
-    public LoginEntity(String userName, String token, Date createdTokenDate, Date tokenExpirationDate, String permission) {
+    public LoginEntity(String userName, Date loginDate, String permission) {
         this.userName = userName;
-        this.token = token;
-        this.createdTokenDate = createdTokenDate;
-        this.tokenExpirationDate = tokenExpirationDate;
+        this.loginDate = loginDate;
         this.permission = permission;
     }
 

@@ -3,8 +3,10 @@ package com.enviosya.login.dao;
 
 import com.enviosya.login.dto.LoginDTO;
 import com.enviosya.login.entities.LoginEntity;
+import com.enviosya.login.entities.LoginUserEntity;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,9 +30,9 @@ public class LoginDAO extends BaseDAO {
 
     public LoginDTO addLogin(LoginDTO loginDTO) {
         try {
-            LoginEntity loginEntity = toEntity(loginDTO);
+            LoginEntity loginEntity = toLoginEntity(loginDTO);
             loginEntity = (LoginEntity) persist(loginEntity);
-            return toDTO(loginEntity);
+            return loginEntityToDTO(loginEntity);
         } catch (Exception e) {
             throw e;
         }  
@@ -41,7 +43,7 @@ public class LoginDAO extends BaseDAO {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(today);
             StringBuilder query = new StringBuilder();
-            query.append("select l from LoginEntity l where l.tokenExpirationDate > :today and l.token = :token");
+            query.append("select l from LoginUserEntity l where l.tokenExpirationDate > :today and l.token = :token");
             return !(entityManager.createQuery(query.toString())
                     .setParameter("token", token)
                     .setParameter("tokenExpirationDate", calendar.getTime(), TemporalType.DATE)
@@ -51,19 +53,53 @@ public class LoginDAO extends BaseDAO {
         }
     }
         
-    private LoginDTO toDTO(LoginEntity entity) {
-        LoginDTO loginDTO = new LoginDTO(entity.getUser(), entity.getToken(), 
-                entity.getStartDate(),entity.getEndDate());
+    private LoginDTO loginEntityToDTO(LoginEntity entity) {
+        LoginDTO loginDTO = new LoginDTO(entity.getUser(), null, entity.getLoginDate(), null);
         return loginDTO;
     }
     
-    private LoginEntity toEntity(LoginDTO loginDTO) {
+//    private LoginDTO LoginUserEntityToDTO(LoginUserEntity entity) {
+//        LoginDTO loginDTO = new LoginDTO (entity.getUserName(), entity.getToken(),
+//            entity.getTokenCreationDate(),entity.getTokenExpirationDate());
+//        return loginDTO;
+//    }
+    
+    private LoginEntity toLoginEntity(LoginDTO loginDTO) {
         LoginEntity entity = new LoginEntity();
         entity.setUser(loginDTO.getUserName());
-        entity.setToken(loginDTO.getToken());
-        entity.setStartDate(loginDTO.getCreatedTokenDate());
-        entity.setEndDate(loginDTO.getLastConnectionDate());
+        entity.setLoginDate(loginDTO.getCreatedTokenDate());
         return entity;
+    }
+    
+    private LoginUserEntity toLoginUserEntity(LoginDTO loginDTO) {
+        LoginUserEntity entity = new LoginUserEntity();
+        entity.setUserName(loginDTO.getUserName());
+        entity.setToken(loginDTO.getToken());
+        entity.setTokenCreationDate(loginDTO.getCreatedTokenDate());
+        entity.setTokenExpirationDate(loginDTO.getLastConnectionDate());
+        return entity;
+    }
+
+    public boolean isRegisterdUser(String userName) {
+        try {
+            StringBuilder query = new StringBuilder();
+            query.append("select l from LoginUserEntity l where l.userName > :userName");
+            return !(entityManager.createQuery(query.toString())
+                    .setParameter("userName", userName)
+                    .getResultList().isEmpty());
+        } catch (Exception e) {
+            throw e;
+        }
+    
+    }
+
+    public void registerUser(LoginDTO user) {
+        try {
+            LoginUserEntity entity = toLoginUserEntity(user);
+            entityManager.persist(entity);
+        } catch (Exception e) {
+            throw e;
+        }
     }
     
 }

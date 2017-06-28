@@ -47,16 +47,22 @@ public class LoginBean {
         calendar.add(Calendar.DATE, 15);
         Date tokenExpirationDate  = calendar.getTime();
         //Llamar a la api de facebook
+        //el userName de facebook
+        String userName = "user_Name";
         //Genero el token
         String hourMD5 = DigestUtils.md5Hex(calendar.getTime().toString());
         //Cambiar el getTime por el token de facebook
-        String facebookTokenMD5 = DigestUtils.md5Hex(calendar.getTime().toString());
+        String facebookToken = "abcd1234";
+        String facebookTokenMD5 = DigestUtils.md5Hex(facebookToken);
         StringBuilder token = new StringBuilder();
         token.append(hourMD5);
         token.append(facebookTokenMD5);
-        //El userName de facebook
-        String userName = "user_Name";
         LoginDTO loginDTO = new LoginDTO(userName, token.toString(), new Date(), tokenExpirationDate);
+        if (!loginDAO.isRegisterdUser(userName)) {
+            //Agregar en el logger que se registro el usuario
+            loginDAO.registerUser(loginDTO);
+        }
+        //Agregar en el logger que el usuario inicio sesion
         return loginDAO.addLogin(loginDTO);
         
     }
