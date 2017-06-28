@@ -18,7 +18,7 @@ public class ShipmentDTO {
         this.clientSender = clientSender;
         this.clientReceiver = clientReceiver;
         this.addressSender = addressSender;        
-        this.addressSender = addressSender;
+        this.addressReceiver = addressReceiver;
         this.cadet = cadet;
         this.packagePhoto = packagePhoto;
         this.comission = comission;

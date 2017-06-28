@@ -45,7 +45,7 @@ public class ShipmentEntity implements Serializable {
     }
 
     public ShipmentEntity() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     public Long getId() {

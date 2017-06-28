@@ -6,16 +6,11 @@ import com.enviosya.shipments.domain.PackageNormal;
 import com.enviosya.shipments.dto.CadetDTO;
 import com.enviosya.shipments.dto.InitialShipmentDTO;
 import com.enviosya.shipments.dto.ShipmentDTO;
-import com.enviosya.shipments.entities.ShipmentEntity;
 import com.enviosya.shipments.exceptions.CadetDistanceException;
 import com.enviosya.shipments.exceptions.CalculateCostException;
 import com.enviosya.shipments.exceptions.ShipmentException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -25,6 +20,7 @@ import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import java.net.URL;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -33,6 +29,7 @@ import java.lang.reflect.Type;
 @Stateless
 @LocalBean
 public class ShipmentBean {
+    
     @EJB
     private ShipmentDAO shipmentDAO;
     
@@ -40,7 +37,7 @@ public class ShipmentBean {
     
     private final Gson gson = new Gson();
     
-    private static final String URL_PACKAGE_DIMENSIONS = "https://ort-arqsoftort-sizer.herokuapp.com/";
+    private static final String URL_PACKAGE_DIMENSIONS = "https://ort-arqsoftort-sizer.herokuapp.com/dimensions";
     
     private static final String URL_CADETS = "http://localhost:8080/Cadet-war/cadet/nearby/{latitude}/{length}";
     
@@ -60,7 +57,7 @@ public class ShipmentBean {
     
     private static final String LENGTH = "100";
 
-    public InitialShipmentDTO create(ShipmentDTO shipmentDTO) throws ShipmentException {
+    public InitialShipmentDTO create(ShipmentDTO shipmentDTO) throws ShipmentException, Exception {
         List<Long> cadetsId = null;
         InitialShipmentDTO initialShipmentDTO = null;
         if(shipmentDTO == null){
@@ -110,27 +107,29 @@ public class ShipmentBean {
                 || shipmentDTO.getAddressSender() == null  || shipmentDTO.getPackagePhoto()  == null;
     }
     
-    private Double calculateShipmentCost(String packagePhoto) throws CalculateCostException {
+    private Double calculateShipmentCost(String packagePhoto) throws CalculateCostException, Exception {
         PackageNormal normalPackage;
         String dimensions;
         Double cost = null;
        
         if(packagePhoto == null){
-            throw new CalculateCostException("Package photo can not be blank");
+            throw new CalculateCostException("Package photo can not be null");
         }
         
         packagePhoto = "{\"image\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAB+FBMVEUAAAA/mUPidDHiLi5Cn0XkNTPmeUrkdUg/m0Q0pEfcpSbwaVdKskg+lUP4zA/iLi3msSHkOjVAmETdJSjtYFE/lkPnRj3sWUs8kkLeqCVIq0fxvhXqUkbVmSjwa1n1yBLepyX1xxP0xRXqUkboST9KukpHpUbuvRrzrhF/ljbwaljuZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklHpEY2iUHWnSjvvRr70QujkC+pUC/90glMuEnlOjVMt0j70QriLS1LtEnnRj3qUUXfIidOjsxAhcZFo0bjNDH0xxNLr0dIrUdmntVTkMoyfL8jcLBRuErhJyrgKyb4zA/5zg3tYFBBmUTmQTnhMinruBzvvhnxwxZ/st+Ktt5zp9hqota2vtK6y9FemNBblc9HiMiTtMbFtsM6gcPV2r6dwroseLrMrbQrdLGdyKoobKbo3Zh+ynrgVllZulTsXE3rV0pIqUf42UVUo0JyjEHoS0HmsiHRGR/lmRz/1hjqnxjvpRWfwtOhusaz0LRGf7FEfbDVmqHXlJeW0pbXq5bec3fX0nTnzmuJuWvhoFFhm0FtrziBsjaAaDCYWC+uSi6jQS3FsSfLJiTirCOkuCG1KiG+wSC+GBvgyhTszQ64Z77KAAAARXRSTlMAIQRDLyUgCwsE6ebm5ubg2dLR0byXl4FDQzU1NDEuLSUgC+vr6urq6ubb29vb2tra2tG8vLu7u7uXl5eXgYGBgYGBLiUALabIAAABsElEQVQoz12S9VPjQBxHt8VaOA6HE+AOzv1wd7pJk5I2adpCC7RUcHd3d3fXf5PvLkxheD++z+yb7GSRlwD/+Hj/APQCZWxM5M+goF+RMbHK594v+tPoiN1uHxkt+xzt9+R9wnRTZZQpXQ0T5uP1IQxToyOAZiQu5HEpjeA4SWIoksRxNiGC1tRZJ4LNxgHgnU5nJZBDvuDdl8lzQRBsQ+s9PZt7s7Pz8wsL39/DkIfZ4xlB2Gqsq62ta9oxVlVrNZpihFRpGO9fzQw1ms0NDWZz07iGkJmIFH8xxkc3a/WWlubmFkv9AB2SEpDvKxbjidN2faseaNV3zoHXvv7wMODJdkOHAegweAfFPx4G67KluxzottCU9n8CUqXzcIQdXOytAHqXxomvykhEKN9EFutG22p//0rbNvHVxiJywa8yS2KDfV1dfbu31H8jF1RHiTKtWYeHxUvq3bn0pyjCRaiRU6aDO+gb3aEfEeVNsDgm8zzLy9egPa7Qt8TSJdwhjplk06HH43ZNJ3s91KKCHQ5x4sw1fRGYDZ0n1L4FKb9/BP5JLYxToheoFCVxz57PPS8UhhEpLBVeAAAAAElFTkSuQmCC\"}";
         
-        dimensions = this.getJsonFromAPI(URL_PACKAGE_DIMENSIONS,"POST", packagePhoto);
+//        dimensions = this.getJsonFromAPI(URL_PACKAGE_DIMENSIONS,"POST", packagePhoto);
+        dimensions = this.sendPost(URL_PACKAGE_DIMENSIONS, packagePhoto);
         
         if(dimensions == null){
-            throw new CalculateCostException("It wasnt possible to calculate dimensions");
+            throw new CalculateCostException("Dimensions can not be null");
         }
-        
-        /* 
+
+        /*
             If in the future a new way to calculate cost, just extend abstract class Package and 
             implement getCost method with new rules
-        */        
+            TODO: Implement remote interfaces 
+        */
        
         normalPackage = gson.fromJson(dimensions, PackageNormal.class);
         
@@ -139,12 +138,12 @@ public class ShipmentBean {
         return  cost;
     }
 
-    private List<Long> getCadetsByDistance() throws CadetDistanceException{
+    private List<Long> getCadetsByDistance() throws CadetDistanceException, Exception{
         List<Long> cadetsIdList = null;
         String urlNearbyCadets = URL_CADETS;
         urlNearbyCadets = urlNearbyCadets.replace("{latitude}", LATITUDE);
         urlNearbyCadets = urlNearbyCadets.replace("{length}", LENGTH);
-        String cadetsJson = this.getJsonFromAPI(urlNearbyCadets,"GET",null);
+        String cadetsJson = this.sendGet(urlNearbyCadets, null);
         Type listCadetDTOType = new TypeToken<List<CadetDTO>>(){}.getType();
         List<CadetDTO> cadetList = (List<CadetDTO>) gson.fromJson(cadetsJson, listCadetDTOType);
         
@@ -159,50 +158,70 @@ public class ShipmentBean {
         return cadetsIdList;
     }
     
-    private String getJsonFromAPI(String _url, String method, String request) {
-        String response = null;
-        URL url = null;
-        try {
-            url = new URL(_url);
-            HttpURLConnection connection = null;
-            try {
-                connection = (HttpURLConnection) url.openConnection();
-                try {
-                    connection.setDoOutput(true);
-                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
-                    outputStreamWriter.write(request);
-                    outputStreamWriter.flush();
-                    connection.setRequestMethod(method);
-                    connection.setRequestProperty("Content-Type", "application/json");
-                    connection.setRequestProperty("X-Mashape-Key", "<required>");
-                    connection.setRequestProperty("Accept", "application/json");
+    // HTTP GET request
+    private String sendGet(String url, String parameters) throws Exception {
 
-                    try {
-                        BufferedReader br = null;
-                        try {
-                            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        } catch (IOException ex) {
-                            logger.error(ex.toString());
-                        }
-                        String output = br != null ? br.readLine() : null;
-                        if (output != null) {
-                            response = output;
-                        }
-                        connection.disconnect();
-                    } catch (IOException ex) {
-                        logger.error(ex.toString());
-                    }
-                    connection.disconnect();
-                } catch (ProtocolException ex) {
-                    logger.error(ex.toString());
-                }
-            } catch (IOException ex) {
-                logger.error(ex.toString());
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // optional default is GET
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = con.getResponseCode();
+            
+            // TODO throw exception dependiendo el response code!
+            
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
             }
-        } catch (MalformedURLException ex) {
-            logger.error(ex.toString());
-        }
-        return response;
+            in.close();
+
+            return response.toString();
+
     }
     
+    // HTTP POST request
+    private String sendPost(String url, String parameters) throws Exception {
+
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            //add reuqest header
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            String urlParameters = parameters;
+
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(urlParameters);
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + urlParameters);
+            System.out.println("Response Code : " + responseCode);
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+            }
+            in.close();
+            return response.toString();
+    }
+
+
 }
