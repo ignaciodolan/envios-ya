@@ -6,6 +6,8 @@
             <name>Login-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <included-library dirs="200">libs.Gson.classpath</included-library>
+            <included-library dirs="200">libs.StringUtils.classpath</included-library>
+            <included-library dirs="200">libs.DigestUtils.classpath</included-library>
             <source-roots>
                 <root id="src.dir" name="Source Packages"/>
             </source-roots>

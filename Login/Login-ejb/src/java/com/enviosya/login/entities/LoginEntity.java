@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -24,22 +25,20 @@ public class LoginEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String _user;
-    
+    private String userName;
     private String token;
-    
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date startDate;
-    
+    private Date createdTokenDate;
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date endDate;
+    private Date tokenExpirationDate;
+    private String permission;
 
     public String getUser() {
-        return _user;
+        return userName;
     }
 
-    public void setUser(String _user) {
-        this._user = _user;
+    public void setUser(String userName) {
+        this.userName = userName;
     }
 
     public String getToken() {
@@ -51,29 +50,40 @@ public class LoginEntity implements Serializable {
     }
 
     public Date getStartDate() {
-        return startDate;
+        return createdTokenDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartDate(Date createdTokenDate) {
+        this.createdTokenDate = createdTokenDate;
     }
 
     public Date getEndDate() {
-        return endDate;
+        return tokenExpirationDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEndDate(Date tokenExpirationDate) {
+        this.tokenExpirationDate = tokenExpirationDate;
     }
+
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+    
+    
 
     public LoginEntity() {
     }
 
-    public LoginEntity(String user, String token, Date startDate, Date endDate) {
-        this._user = user;
+    public LoginEntity(String userName, String token, Date createdTokenDate, Date tokenExpirationDate, String permission) {
+        this.userName = userName;
         this.token = token;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.createdTokenDate = createdTokenDate;
+        this.tokenExpirationDate = tokenExpirationDate;
+        this.permission = permission;
     }
 
     public Long getId() {
