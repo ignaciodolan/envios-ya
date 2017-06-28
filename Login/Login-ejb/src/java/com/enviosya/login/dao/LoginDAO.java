@@ -54,7 +54,7 @@ public class LoginDAO extends BaseDAO {
     }
         
     private LoginDTO loginEntityToDTO(LoginEntity entity) {
-        LoginDTO loginDTO = new LoginDTO(entity.getUser(), null, entity.getLoginDate(), null);
+        LoginDTO loginDTO = new LoginDTO(entity.getUserName(), null, entity.getLoginDate(), null, entity.getLoginType());
         return loginDTO;
     }
     
@@ -66,7 +66,8 @@ public class LoginDAO extends BaseDAO {
     
     private LoginEntity toLoginEntity(LoginDTO loginDTO) {
         LoginEntity entity = new LoginEntity();
-        entity.setUser(loginDTO.getUserName());
+        entity.setUserName(loginDTO.getUserName());
+        entity.setLoginType(loginDTO.getLoginType());
         entity.setLoginDate(loginDTO.getCreatedTokenDate());
         return entity;
     }
@@ -80,12 +81,12 @@ public class LoginDAO extends BaseDAO {
         return entity;
     }
 
-    public boolean isRegisterdUser(String userName) {
+    public boolean isRegisterdUser(LoginDTO loginDTO) {
         try {
             StringBuilder query = new StringBuilder();
-            query.append("select l from LoginUserEntity l where l.userName > :userName");
+            query.append("select l from LoginUserEntity l where l.userName = :loginDTO.getUserName()");
             return !(entityManager.createQuery(query.toString())
-                    .setParameter("userName", userName)
+                    .setParameter("userName", loginDTO.getUserName())
                     .getResultList().isEmpty());
         } catch (Exception e) {
             throw e;

@@ -56,7 +56,7 @@ public class LoginResource {
             response = Response.ok().build();
         } catch (LoginException e) {
             message = new StringBuilder();
-            message.append("[Exception]: ");
+            message.append("[Login Exception]: ");
             message.append(e.getMessage());
             logger.error(message.toString());
             response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
@@ -65,15 +65,14 @@ public class LoginResource {
     }
     
     @POST
-    @Path("/login/{loginType}")
+    @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response doLogin(@PathParam("loginType") String loginType) throws LoginException {
+    public Response doLogin(String messageJson) throws LoginException {
         StringBuilder message;
         Response response;
         try {
-            loginBean.doLogin(loginType);
-            //Llamar a la pagina de login
-            //Recibir la data y mandarsela al bean
+            LoginDTO loginDTO = gson.fromJson(messageJson, LoginDTO.class);
+            loginBean.doLogin(loginDTO);
             response = Response.ok().entity(gson.toJson("Login success")).build();
         } catch (JsonSyntaxException e) {
             message = new StringBuilder();

@@ -14,15 +14,18 @@ public class LoginDTO {
     
     private Date lastConnectionDate;
     
+    private String loginType;
+    
 
     public LoginDTO() {
     }
 
-    public LoginDTO(String userName, String token, Date createdTokenDate, Date lastConnectionDate) {
+    public LoginDTO(String userName, String token, Date createdTokenDate, Date lastConnectionDate, String loginType) {
         this.userName = userName;
         this.token = token;
         this.createdTokenDate = createdTokenDate;
         this.lastConnectionDate = lastConnectionDate;
+        this.loginType = loginType;
     }
     
     public String getUserName() {
@@ -58,6 +61,14 @@ public class LoginDTO {
         this.lastConnectionDate = lastConnectionDate;
     }    
 
+    public String getLoginType() {
+        return loginType;
+    }
 
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
+
+    
 }
 

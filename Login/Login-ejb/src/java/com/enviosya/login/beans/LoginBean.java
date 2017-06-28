@@ -30,15 +30,16 @@ public class LoginBean {
     
     private HttpServletRequest request;
 
-    private static final String EMPTY_TYPE = "Login type is empty";
+    private static final String EMPTY_FIELDS = "Token or login type is empty";
     private static final String EMPTY_TOKEN = "Token is empty";
+    private static final String EXPIRED_TOKEN = "The token expired";
     private static final String INCORRECT_DATA = "Incorrect token";
 
 
-    public LoginDTO doLogin(String loginType) throws LoginException{
+    public LoginDTO doLogin(LoginDTO loginDTO) throws LoginException{
         //Agregar al logger que el usuario se logueo
-        if (StringUtils.isBlank(loginType)) {
-            throw new LoginException(EMPTY_TYPE);
+        if (StringUtils.isBlank(loginDTO.getLoginType()) || StringUtils.isBlank(loginDTO.getToken() )) {
+            throw new LoginException(EMPTY_FIELDS);
         }
  
         Calendar calendar = Calendar.getInstance();
@@ -48,7 +49,7 @@ public class LoginBean {
         Date tokenExpirationDate  = calendar.getTime();
         //Llamar a la api de facebook
         //el userName de facebook
-        String userName = "user_Name";
+        loginDTO.setUserName("user_Name");
         //Genero el token
         String hourMD5 = DigestUtils.md5Hex(calendar.getTime().toString());
         //Cambiar el getTime por el token de facebook
@@ -57,8 +58,10 @@ public class LoginBean {
         StringBuilder token = new StringBuilder();
         token.append(hourMD5);
         token.append(facebookTokenMD5);
-        LoginDTO loginDTO = new LoginDTO(userName, token.toString(), new Date(), tokenExpirationDate);
-        if (!loginDAO.isRegisterdUser(userName)) {
+        loginDTO.setToken(token.toString());
+        loginDTO.setCreatedTokenDate(new Date());
+        loginDTO.setLastConnectionDate(tokenExpirationDate);
+        if (!loginDAO.isRegisterdUser(loginDTO)) {
             //Agregar en el logger que se registro el usuario
             loginDAO.registerUser(loginDTO);
         }
@@ -74,6 +77,11 @@ public class LoginBean {
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        return loginDAO.activeUserToken(calendar.getTime(), token);
+        if (loginDAO.activeUserToken(calendar.getTime(), token)) {
+            return true;
+        }
+        else {
+            throw new LoginException(EXPIRED_TOKEN);
+        }
     }    
 }

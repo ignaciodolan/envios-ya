@@ -21,12 +21,33 @@ public class LoginEntity implements Serializable {
     private String permission;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date loginDate;
+    private String loginType;
+    
+    public LoginEntity() {
+    }
 
-    public String getUser() {
+    public LoginEntity(String userName, String permission, Date loginDate, String loginType) {
+        this.userName = userName;
+        this.permission = permission;
+        this.loginDate = loginDate;
+        this.loginType = loginType;
+    }
+
+    
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
         return userName;
     }
 
-    public void setUser(String userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
@@ -45,25 +66,15 @@ public class LoginEntity implements Serializable {
     public void setLoginDate(Date loginDate) {
         this.loginDate = loginDate;
     }
+
+    public String getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
     
-    
-
-    public LoginEntity() {
-    }
-
-    public LoginEntity(String userName, Date loginDate, String permission) {
-        this.userName = userName;
-        this.loginDate = loginDate;
-        this.permission = permission;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Override
     public int hashCode() {
