@@ -45,17 +45,24 @@ public class ClientEntity implements Serializable {
     @NotNull
     private String paymentMethod;
     
+    private String creditCardNumber; 
+    
+    private String cvc;
+    
     public ClientEntity(){
     
     }
     
-    public ClientEntity(Long id, String document, String name, String lastname, String payments, String email) {
+    public ClientEntity(Long id, String document, String name, String lastname, 
+            String payments, String email, String creditCardNumber, String cvc) {
         this.id = id;
         this.document = document;
         this.name = name;
         this.lastName = lastname;
         this.email = email;
         this.paymentMethod = payments;
+        this.creditCardNumber = creditCardNumber;
+        this.cvc = cvc;
     }
     
     public Long getId() {
@@ -106,6 +113,22 @@ public class ClientEntity implements Serializable {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
+
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
+
+    public void setCreditCardNumber(String creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
+    }
+
+    public String getCvc() {
+        return cvc;
+    }
+
+    public void setCvc(String cvc) {
+        this.cvc = cvc;
+    }
     
     @Override
     public int hashCode() {
@@ -122,5 +145,9 @@ public class ClientEntity implements Serializable {
         }
         final ClientEntity other = (ClientEntity) object;
         return Objects.equals(this.id, other.id);
+    }
+    @Override
+    public String toString() {
+        return "ClientEntity{" + "id= " + id + '}';
     }
 }

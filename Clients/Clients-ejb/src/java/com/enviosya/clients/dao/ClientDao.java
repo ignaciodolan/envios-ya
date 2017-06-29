@@ -7,6 +7,7 @@ package com.enviosya.clients.dao;
 
 import com.enviosya.clients.dto.ClientDTO;
 import com.enviosya.clients.entities.ClientEntity;
+import java.util.HashSet;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -48,13 +49,16 @@ public class ClientDao extends BaseDao{
         entity.setLastName(clientDTO.getLastName());
         entity.setPaymentMethod(clientDTO.getPaymentMethod());
         entity.setEmail(clientDTO.getEmail());
+        entity.setCreditCardNumber(clientDTO.getCreditCardNumber());
+        entity.setCvc(clientDTO.getCvc());
+        
         return entity;
     }
     
     public ClientDTO toDTO(ClientEntity entity) {
         ClientDTO clientDTO;
         clientDTO = new ClientDTO(entity.getId(), entity.getDocument(), entity.getName(), entity.getLastName(), 
-        entity.getPaymentMethod(), entity.getEmail());
+        entity.getPaymentMethod(), entity.getEmail(), entity.getCreditCardNumber(), entity.getCvc());
         return clientDTO;
     }
 
@@ -65,6 +69,8 @@ public class ClientDao extends BaseDao{
         originalClient.setDocument(clientDTO.getDocument());
         originalClient.setEmail(clientDTO.getEmail());
         originalClient.setPaymentMethod(clientDTO.getPaymentMethod());
+        originalClient.setCreditCardNumber(clientDTO.getCreditCardNumber());
+        originalClient.setCvc(clientDTO.getCvc());
         originalClient = entityManager.merge(originalClient);
         return toDTO(originalClient);
     }
