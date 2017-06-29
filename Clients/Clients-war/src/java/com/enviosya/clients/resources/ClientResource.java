@@ -160,13 +160,6 @@ public class ClientResource {
         }
         return response;
     }
-   
-    @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public String getXml() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
 
     @PUT
     @Consumes(MediaType.APPLICATION_XML)
