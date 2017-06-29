@@ -50,6 +50,7 @@ public class ShipmentBean {
     
     private static final String NULL_ENTITY = " Entity to build is null";
     
+    private static final String INVALID_CLIENT = " Invalid clients";
     
     private static final String REQUIRED_BLANK_FIELDS
             = " The operation could not be completed because there are required fields empty";
@@ -83,6 +84,24 @@ public class ShipmentBean {
             
             try { 
                 
+                boolean clientSenderExists = clientExists(initialShipmentDTO.getClientSender());
+                boolean clientReceiverExists = clientExists(initialShipmentDTO.getClientReceiver());
+                if(!clientSenderExists || !clientReceiverExists){
+                    StringBuilder message = new StringBuilder();
+                    message.append(INVALID_CLIENT);
+                    logger.error(message.toString());
+                    throw new ShipmentException(message.toString());     
+                }
+            } catch (Exception exception){
+                StringBuilder message = new StringBuilder();
+                message.append(INVALID_CLIENT);
+                message.append(exception.getMessage());
+                logger.error(message.toString());
+                throw new ShipmentException(message.toString());                
+            }
+            
+            try { 
+                
                 cadetsId = getCadetsByDistance();
                 
             } catch (CadetDistanceException exception){
@@ -102,7 +121,6 @@ public class ShipmentBean {
             
         } catch (CalculateCostException exception) {
             StringBuilder message = new StringBuilder();
-            message.append("There was a problem calculating the package cost");
             message.append(exception.getMessage());
             logger.error(message.toString());
             throw new ShipmentException(message.toString());
@@ -115,6 +133,8 @@ public class ShipmentBean {
         return shipmentDTO.getDescription() == null || shipmentDTO.getAddressReceiver() == null 
                 || shipmentDTO.getAddressSender() == null  || shipmentDTO.getPackagePhoto()  == null;
     }
+    
+    
     
     private Double calculateShipmentCost(String packagePhoto) throws CalculateCostException, Exception {
         PackageNormal normalPackage;
@@ -356,6 +376,14 @@ public class ShipmentBean {
         parameters = parameters.replace("{message}", message);
         parameters = parameters.replace("{type}", via);
         this.sendPost(URL_QUEUE_NOTIFICATION, parameters);
+    }
+
+    private boolean clientExists(Long clientSender) throws Exception {
+        String urlClient = URL_CLIENTS;
+        urlClient = urlClient.replace("{id}", clientSender.toString());
+        String clientSenderJSON = this.sendGet(urlClient);
+        ClientDTO client = gson.fromJson(clientSenderJSON, ClientDTO.class);
+        return client != null;
     }
 
 }

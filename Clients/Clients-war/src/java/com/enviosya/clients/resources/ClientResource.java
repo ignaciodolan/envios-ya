@@ -145,10 +145,6 @@ public class ClientResource {
         Response response;
         try {
             ClientDTO clientDTO = clientBean.getClientById(id);
-            message = new StringBuilder();
-            message.append("Client was modified: ");
-            message.append(gson.toJson(clientDTO));
-            logger.success(message.toString());
             response = Response.status(Response.Status.OK).entity(gson.toJson(clientDTO)).build();
         } catch (ClientException e) {
             message = new StringBuilder();
