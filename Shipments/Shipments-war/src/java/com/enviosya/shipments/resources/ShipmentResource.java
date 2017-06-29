@@ -8,8 +8,6 @@ import com.enviosya.shipments.exceptions.ShipmentException;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -150,7 +148,7 @@ public class ShipmentResource {
     @GET
     @Path("/confirm/{shipmentId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response confirmarRecepcion(@PathParam("shipmentId") Long shipmentId) {
+    public Response confirmarRecepcion(@PathParam("shipmentId") Long shipmentId){
         StringBuilder message;
         Response response;
         try {
@@ -171,7 +169,7 @@ public class ShipmentResource {
             message.append("[JsonIOException]");
             message.append(e.getMessage());
             logger.error(message.toString());
-            response =  Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(mmessageensaje.toString()).build();
+            response =  Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message.toString()).build();
         } catch (ShipmentException ex) {
             message = new StringBuilder();
             message.append("[ShipmentException]: ");
@@ -179,6 +177,15 @@ public class ShipmentResource {
             logger.error(message.toString());
             response =  Response
                     .status(Response.Status.BAD_REQUEST)
+                    .entity(message)
+                    .build();
+        } catch (Exception ex) {
+            message = new StringBuilder();
+            message.append("[Exception]: ");
+            message.append(ex.getMessage());
+            logger.error(message.toString());
+            response =  Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(message)
                     .build();
         }

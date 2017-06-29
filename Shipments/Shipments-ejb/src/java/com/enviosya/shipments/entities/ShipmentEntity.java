@@ -132,6 +132,14 @@ public class ShipmentEntity implements Serializable {
         this.comission = comission;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

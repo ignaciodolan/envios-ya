@@ -96,5 +96,9 @@ public class CadetDTO {
     public void setVehiclesIds(List<Long> vehiclesIds) {
         this.vehiclesIds = vehiclesIds;
     }
+
+    public String getFullName() {
+        return this.getName() + " " + this.getLastName();
+    }
     
 }

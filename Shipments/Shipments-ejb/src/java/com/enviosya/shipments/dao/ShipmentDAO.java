@@ -64,7 +64,7 @@ public class ShipmentDAO extends BaseDAO{
         return this.toDTO(shipment);
     }
 
-    public void changeShipmentStatus(Long shipmentId, int status) {
+    public ShipmentDTO changeShipmentStatus(Long shipmentId, int status) {
         ShipmentEntity shipment =  get(shipmentId);
         shipment.setStatus(status);
         entityManager.merge(shipment);
