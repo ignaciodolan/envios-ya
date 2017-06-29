@@ -17,7 +17,7 @@ public class EmailFactory {
         String message = getMessage(notificationMessage);
 
         Properties properties = new Properties();
-        properties.put("mail.smtp.user", "ignacio.dolan@gmail.com");
+        properties.put("mail.smtp.user", "");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.starttls.enable", "true");
@@ -33,7 +33,7 @@ public class EmailFactory {
             Authenticator gmailAuth = new GmailAUTH();
             Session session = Session.getInstance(properties, gmailAuth);
             MimeMessage mailMessage = new MimeMessage(session);
-            mailMessage.setFrom(new InternetAddress("ignacio.dolan@gmail.com"));
+            mailMessage.setFrom(new InternetAddress(""));
             mailMessage.setSubject(subject);
             mailMessage.setText(message);
             mailMessage.addRecipient(
@@ -70,7 +70,7 @@ public class EmailFactory {
     
     private class GmailAUTH extends javax.mail.Authenticator {
         public PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication("ignacio.dolan@gmail.com", "mLEhmWsPxpgQZpzwNqzos4hn");
+            return new PasswordAuthentication("", "");
         }
     }
     
