@@ -2,6 +2,8 @@ package com.enviosya.shipments.dao;
 
 import com.enviosya.shipments.dto.ShipmentDTO;
 import com.enviosya.shipments.entities.ShipmentEntity;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -69,6 +71,20 @@ public class ShipmentDAO extends BaseDAO{
         shipment.setStatus(status);
         entityManager.merge(shipment);
         return this.toDTO(shipment);
+    }
+
+    public List<ShipmentEntity> getShipmentListFromCadetId(Long cadetId) {
+        try {
+            List<ShipmentEntity> shipmentEntityList = new ArrayList<>();
+            shipmentEntityList = entityManager.createQuery(
+                    "select s "
+                    + "from ShipmentEntity s "
+                    + "where s.cadet = :id")
+                    .setParameter("id", cadetId).getResultList();            
+            return shipmentEntityList;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 }

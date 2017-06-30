@@ -25,8 +25,8 @@ public class ReviewDTO implements Serializable{
         return rating;
     }
 
-    public void setRating(int qualification) {
-        this.rating = qualification;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public String getComment() {
