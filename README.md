@@ -6,8 +6,13 @@
 - git clone git@github.com:ArqSoftCourse/m7a-obli-CarusoDolanGuichon.git
 
 **Proyecto**
-1) crea pool:
-//CLient pool
+
+1) 
+Se deben crear 5 bases de datos: clients, cadets, login, reviews, shipments
+
+2)
+crear pools:
+//Client pool
 create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property portNumber=3306:password=root:user=root:serverName=localhost:databaseName=clients:ServerName=localhost:port=3306 ClientPool
 
 //Shipment pool
@@ -16,11 +21,27 @@ create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.
 //Cadet pool
 create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property portNumber=3306:password=root:user=root:serverName=localhost:databaseName=cadets:ServerName=localhost:port=3306 Cadet
 
-2) crea resource
+//Review pool
+create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property portNumber=3306:password=root:user=root:serverName=localhost:databaseName=cadets:ServerName=localhost:port=3306 Cadet
+
+3) crea resource
 
 create-jdbc-resource --connectionpoolid ClientPool jdbc/clients
 create-jdbc-resource --connectionpoolid ShipmentPool jdbc/shipments
 create-jdbc-resource --connectionpoolid Cadet jdbc/cadets
+create-jdbc-resource --connectionpoolid Login jdbc/login
+create-jdbc-resource --connectionpoolid Reviews jdbc/reviews
+
+4) Crear Queues
+create-jms-resource --restype javax.jms.Queue --property Name=Queue jms/Queue
+
+jms/QueueCheckClient
+jms/QueueCheckDuplicates
+jms/QueueAddReview
+jms/QueueCheckComment
+jms/QueueCheckWords
+jms/QueueCheckSemantic
+
 
 ### Desarrollo
 **GIT**
