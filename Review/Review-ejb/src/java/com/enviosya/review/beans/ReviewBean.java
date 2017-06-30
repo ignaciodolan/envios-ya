@@ -34,7 +34,7 @@ public class ReviewBean{
     @Resource(lookup = "jms/ConnectionFactory")
     private ConnectionFactory connectionFactory;
 
-    @Resource(lookup = "jms/QueueValidate")
+    @Resource(lookup = "jms/QueueValidateClient")
     private Queue queueValidate;
     
     private final LoggerEnviosYa logger = new LoggerEnviosYa(ReviewBean.class);

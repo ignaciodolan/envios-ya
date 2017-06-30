@@ -7,6 +7,7 @@ import com.enviosya.shipments.dto.CadetDTO;
 import com.enviosya.shipments.dto.InitialShipmentDTO;
 import com.enviosya.shipments.dto.ClientDTO;
 import com.enviosya.shipments.dto.ShipmentDTO;
+import com.enviosya.shipments.entities.ShipmentEntity;
 import com.enviosya.shipments.exceptions.CadetDistanceException;
 import com.enviosya.shipments.exceptions.CalculateCostException;
 import com.enviosya.shipments.exceptions.RequestException;
@@ -21,9 +22,13 @@ import javax.ejb.LocalBean;
 import java.net.URL;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Stateless
 @LocalBean
@@ -43,6 +48,8 @@ public class ShipmentBean {
     private static final String URL_CLIENTS = "http://localhost:8080/Clients-war/client/{id}";
     
     private static final String URL_GET_CADET = "http://localhost:8080/Cadet-war/cadet/{id}";
+    
+    private static final String URL_REVIEW_CADET = "http://localhost:8080/Review-war/review/";
     
     private static final String URL_QUEUE_NOTIFICATION = "http://localhost:8080/Notifications-war/notification";
     
@@ -196,7 +203,7 @@ public class ShipmentBean {
     }
     
     // HTTP GET request
-    private String sendGet(String url) throws Exception {
+    private String sendGet(String url) throws MalformedURLException, IOException, RequestException  {
 
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -273,14 +280,53 @@ public class ShipmentBean {
             return response.toString();
     }
 
-    public ShipmentDTO addCadetToShipment(Long shipmentId, Long cadetId) throws ShipmentException {
+    public ShipmentDTO addCadetToShipment(Long shipmentId, Long cadetId) throws ShipmentException, IOException {
         if(shipmentId == null){
             throw new ShipmentException(NULL_ENTITY);
         }
         if(cadetId == null){
             throw new ShipmentException(NULL_ENTITY);
         }
-        ShipmentDTO shipmentDTO = shipmentDAO.addCadetToShipment(shipmentId, cadetId); 
+        ShipmentDTO shipmentDTO = shipmentDAO.addCadetToShipment(shipmentId, cadetId);
+        // Getting Cadet information
+        try {
+            String urlCadet = URL_GET_CADET;
+            urlCadet = urlCadet.replace("{id}", shipmentDTO.getCadet().toString());
+            String cadetJSON = this.sendGet(urlCadet);
+            CadetDTO cadetDTO = gson.fromJson(cadetJSON, CadetDTO.class);
+
+            //Email (Notification) for cadet
+            StringBuilder messageForCadet = new StringBuilder();
+            messageForCadet.append("<start-email>]");
+            messageForCadet.append(cadetDTO.getEmail());
+            messageForCadet.append("<end-email>");
+            messageForCadet.append("<start-subject>");
+            messageForCadet.append("New package to deliver");
+            messageForCadet.append("<end-subject>");
+            messageForCadet.append("<start-message>");
+            messageForCadet.append(" Package info: ");
+            messageForCadet.append(shipmentDTO.getDescription());
+            messageForCadet.append(" Address: ");
+            messageForCadet.append(shipmentDTO.getAddressReceiver());
+            messageForCadet.append("<end-message>");
+            this.queueNotification(messageForCadet.toString(), "email");
+            
+        } catch(MalformedURLException | RequestException ex){
+            StringBuilder message = new StringBuilder();
+            message.append("[URL]");
+            message.append(ex.getMessage());
+            logger.error(message.toString());
+            message.append(" maformed: ");
+            throw new ShipmentException(message.toString());
+        } catch (Exception ex) {
+            StringBuilder message = new StringBuilder();
+            message.append(ex.getMessage());
+            logger.error(message.toString());
+            throw new ShipmentException(message.toString());
+        }
+        
+        
+        
         return shipmentDTO;
     }
     
@@ -324,8 +370,10 @@ public class ShipmentBean {
         messageSender.append("<start-message>");
         messageSender.append(clientSenderDto.getName());
         messageSender.append(clientSenderDto.getLastName());
-        messageSender.append(" Your package will be delivered by: ");
+        messageSender.append(" Your package arrived, was delivered by: ");
         messageSender.append(cadetDTO.getFullName());
+        messageSender.append(" Please review: ");
+        messageSender.append(URL_REVIEW_CADET);
         messageSender.append("<end-message>");
         
         this.queueNotification(messageSender.toString(), "email");
@@ -336,37 +384,21 @@ public class ShipmentBean {
         messageForReceiver.append(clientReceiverDto.getEmail());
         messageForReceiver.append("<end-email>");
         messageForReceiver.append("<start-subject>");
-        messageForReceiver.append("There is a package on the way for you");
+        messageForReceiver.append("Your package arrived");
         messageForReceiver.append("<end-subject>");
         messageForReceiver.append("<start-message>");
         messageForReceiver.append(clientReceiverDto.getName());
         messageForReceiver.append(clientReceiverDto.getLastName());
-        messageForReceiver.append(" You will receive a package from: ");
+        messageForReceiver.append(" was delivered from: ");
         messageForReceiver.append(clientSenderDto.getName());
         messageForReceiver.append(clientSenderDto.getLastName());
         messageForReceiver.append(". Delivered by: ");
         messageForReceiver.append(cadetDTO.getFullName());
+        messageSender.append(" Please review: ");
+        messageSender.append(URL_REVIEW_CADET);
         messageForReceiver.append("<end-message>");
         
         this.queueNotification(messageForReceiver.toString(), "email");
-        
-        //Email (Notification) for cadet
-        StringBuilder messageForCadet = new StringBuilder();
-        messageForCadet.append("<start-email>]");
-        messageForCadet.append(cadetDTO.getEmail());
-        messageForCadet.append("<end-email>");
-        messageForCadet.append("<start-subject>");
-        messageForCadet.append("New package to deliver");
-        messageForCadet.append("<end-subject>");
-        messageForCadet.append("<start-message>");
-        messageForCadet.append(" FROM: ");
-        messageForCadet.append(clientSenderDto.getName());
-        messageForCadet.append(clientSenderDto.getLastName());
-        messageForCadet.append(" Your package will be delivered by: ");
-        messageForCadet.append(cadetDTO.getFullName());
-        messageForCadet.append("<end-message>");
-        
-        this.queueNotification(messageForCadet.toString(), "email");
         
         return shipmentDTO;
     }
@@ -384,6 +416,27 @@ public class ShipmentBean {
         String clientSenderJSON = this.sendGet(urlClient);
         ClientDTO client = gson.fromJson(clientSenderJSON, ClientDTO.class);
         return client != null;
+    }
+
+    public List<ShipmentDTO> getShipmentsByCadet(Long cadetId) throws ShipmentException{
+        // Chequear si esta logueado
+        try {
+        
+            List<ShipmentEntity> shipmentEntityList = shipmentDAO.getShipmentListFromCadetId(cadetId);
+            
+            List<ShipmentDTO> shipmentDTOList = new ArrayList<ShipmentDTO>();
+
+            shipmentEntityList.forEach((shipment) -> {
+                shipmentDTOList.add(shipmentDAO.toDTO(shipment));
+            });
+            
+            return shipmentDTOList;
+
+        } catch (Exception e) {
+            
+            throw new ShipmentException(e.getMessage());
+        
+        }
     }
 
 }
