@@ -136,7 +136,7 @@ public class ReviewMessageBean implements MessageListener {
             message.append("<start-message>");
             message.append("The content of the comment must exceed the ");
             message.append(minimumWordsQty);
-            message.append(" characters");
+            message.append(" words");
             message.append("<end-message>");
                 
         }

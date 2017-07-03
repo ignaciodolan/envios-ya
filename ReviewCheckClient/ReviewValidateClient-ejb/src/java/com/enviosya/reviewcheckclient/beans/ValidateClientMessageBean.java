@@ -1,7 +1,8 @@
 
 package com.enviosya.reviewcheckclient.beans;
 
-import com.enviosya.reviewcheckclient.dto.ReviewDTO;
+//import com.enviosya.reviewcheckclient.dto.ReviewDTO;
+import com.enviosya.review.dto.ReviewDTO;
 import com.enviosya.reviewcheckclient.dto.ShipmentDTO;
 import com.google.gson.Gson;
 import javax.annotation.Resource;
@@ -56,8 +57,10 @@ public class ValidateClientMessageBean implements MessageListener {
     
     @Override
     public void onMessage(Message message) {
+        ObjectMessage objMsg=(ObjectMessage) message;
         try {
-            ReviewDTO reviewDTO = (ReviewDTO) ((ObjectMessage) message).getObject();
+            ReviewDTO reviewDTO;
+            reviewDTO = (ReviewDTO) objMsg.getObject();
             validateClient(reviewDTO);
         } catch (JMSException ex) {
             logger.error(ex.getMessage());
@@ -83,7 +86,7 @@ public class ValidateClientMessageBean implements MessageListener {
         ShipmentDTO shipmentReturn = null;
         URL url;
         try {
-            StringBuilder urlBuilder = new StringBuilder("http://localhost:8080/Shipments-war/shipment/{id}");
+            StringBuilder urlBuilder = new StringBuilder("http://localhost:8080/Shipments-war/shipment/");
             urlBuilder.append(id.toString());
             url = new URL(urlBuilder.toString());
             HttpURLConnection conn;

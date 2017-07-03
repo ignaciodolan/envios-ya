@@ -1,39 +1,32 @@
-
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.enviosya.reviewcheckclient.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public class ReviewDTO implements Serializable{
-    private int calification;
+/**
+ *
+ * @author ignaciodolan
+ */
+public class ReviewDTO implements Serializable{                        
+    private int rating;
     private String comment;
     private int status;
     private int feeling;
     private Long shipmentId;
     private Long clientId;
+    private Date createdDate;
 
-    public ReviewDTO() {
+    public int getRating() {
+        return rating;
     }
 
-    public ReviewDTO(int calification, String comment, int status, int feeling, Long shipmentId, Long clientId) {
-        this.calification = calification;
-        this.comment = comment;
-        this.status = status;
-        this.feeling = feeling;
-        this.shipmentId = shipmentId;
-        this.clientId = clientId;
-    }
-
-    
-    
-    public int getCalification() {
-        return calification;
-    }
-    
-    
-
-    public void setCalification(int calification) {
-        this.calification = calification;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public String getComment() {
@@ -76,8 +69,13 @@ public class ReviewDTO implements Serializable{
         this.clientId = clientId;
     }
 
-    
-    
-    
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    
 }
