@@ -11,7 +11,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class ShipmentDAO extends BaseDAO{
     
-    @PersistenceContext
+    @PersistenceContext(unitName = "Shipments-ejbPU")
     private EntityManager entityManager;
 
     public ShipmentDAO() {

@@ -22,7 +22,8 @@ create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.
 create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property portNumber=3306:password=root:user=root:serverName=localhost:databaseName=cadets:ServerName=localhost:port=3306 Cadet
 
 //Review pool
-create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property portNumber=3306:password=root:user=root:serverName=localhost:databaseName=cadets:ServerName=localhost:port=3306 Cadet
+create-jdbc-connection-pool --datasourceclassname com.mysql.jdbc.jdbc2.optional.MysqlDataSource --restype javax.sql.DataSource --property portNumber=3306:password=root:user=root:serverName=localhost:databaseName=reviews:ServerName=localhost:port=3306 Review
+
 
 3) crea resource
 
@@ -30,19 +31,20 @@ create-jdbc-resource --connectionpoolid ClientPool jdbc/clients
 create-jdbc-resource --connectionpoolid ShipmentPool jdbc/shipments
 create-jdbc-resource --connectionpoolid Cadet jdbc/cadets
 create-jdbc-resource --connectionpoolid Login jdbc/login
-create-jdbc-resource --connectionpoolid Reviews jdbc/reviews
+create-jdbc-resource --connectionpoolid Review jdbc/reviews
 
 4) Crear Queues
 create-jms-resource --restype javax.jms.Queue --property Name=Queue jms/Queue
+create-jms-resource --restype javax.jms.Queue --property Name=QueueCheckClient jms/QueueCheckClient
+create-jms-resource --restype javax.jms.Queue --property Name=QueueCheckDuplicates jms/QueueCheckDuplicates
+create-jms-resource --restype javax.jms.Queue --property Name=QueueAddReview jms/QueueAddReview
+create-jms-resource --restype javax.jms.Queue --property Name=QueueCheckComment jms/QueueCheckComment
+create-jms-resource --restype javax.jms.Queue --property Name=QueueCheckWords jms/QueueCheckWords
+create-jms-resource --restype javax.jms.Queue --property Name=QueueCheckSemantic jms/QueueCheckSemantic
+create-jms-resource --restype javax.jms.Queue --property Name=QueueNotifications jms/QueueNotifications
 
-jms/QueueCheckClient
-jms/QueueCheckDuplicates
-jms/QueueAddReview
-jms/QueueCheckComment
-jms/QueueCheckWords
-jms/QueueCheckSemantic
-
-
+QueueValidateClient
+create-jms-resource --restype javax.jms.Queue --property Name=QueueValidateClient jms/QueueValidateClient
 ### Desarrollo
 **GIT**
 Por consola:

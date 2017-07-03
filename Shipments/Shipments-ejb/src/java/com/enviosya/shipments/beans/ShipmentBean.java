@@ -91,8 +91,8 @@ public class ShipmentBean {
             
             try { 
                 
-                boolean clientSenderExists = clientExists(initialShipmentDTO.getClientSender());
-                boolean clientReceiverExists = clientExists(initialShipmentDTO.getClientReceiver());
+                boolean clientSenderExists = clientExists(shipmentDTO.getClientSender());
+                boolean clientReceiverExists = clientExists(shipmentDTO.getClientReceiver());
                 if(!clientSenderExists || !clientReceiverExists){
                     StringBuilder message = new StringBuilder();
                     message.append(INVALID_CLIENT);

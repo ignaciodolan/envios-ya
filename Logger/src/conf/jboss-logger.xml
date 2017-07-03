@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-app>
+<loader-repository>
+uy.edu.ort:loader=MyClassLoader
+<loader-repository-config>
+java2ParentDelegation=false
+</loader-repository-config>
+</loader-repository>
+</jboss-app>

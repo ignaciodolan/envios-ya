@@ -23,7 +23,7 @@ import javax.jms.Queue;
 import javax.jms.Session;
 
 @MessageDriven(activationConfig = {
-    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/QueueCheckComment")
+    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "jms/QueueSemanticReview")
     ,
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
 })

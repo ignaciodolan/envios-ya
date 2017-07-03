@@ -1,11 +1,12 @@
 package com.enviosya.logger;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 public class LoggerEnviosYa {
     private Logger logger;
-
     public LoggerEnviosYa(Class name) {
         logger = Logger.getLogger(name.getName());
+        BasicConfigurator.configure();
     }
     
     public void error(String message){

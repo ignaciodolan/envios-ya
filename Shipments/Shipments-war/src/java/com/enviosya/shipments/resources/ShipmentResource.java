@@ -16,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -92,7 +91,6 @@ public class ShipmentResource {
         return response;
     }
     
-    
     @GET
     @Path("/set/{shipmentId}/{cadetId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -145,6 +143,7 @@ public class ShipmentResource {
         }
         return response;
     }
+    
     @GET
     @Path("/confirm/{shipmentId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -191,23 +190,5 @@ public class ShipmentResource {
         }
         return response;
     }
-    /**
-     * Retrieves representation of an instance of com.enviosya.shipments.ws.ShipmentResource
-     * @return an instance of java.lang.String
-     */
-    @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public String getXml() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
 
-    /**
-     * PUT method for updating or creating an instance of ShipmentResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
-    }
 }
