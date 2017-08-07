@@ -47,6 +47,7 @@ QueueValidateClient
 create-jms-resource --restype javax.jms.Queue --property Name=QueueValidateClient jms/QueueValidateClient
 ### Desarrollo
 **GIT**
+
 Por consola:
 ```sh
 cd [carpeta destino]
